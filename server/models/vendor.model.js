@@ -78,9 +78,7 @@ const vendorSchema = new Schema({
         ref:"Venues",
         required:true,
     },
-    addOns:{
-        type:String,
-    },
+   
     userId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User"

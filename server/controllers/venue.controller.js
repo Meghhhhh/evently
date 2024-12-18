@@ -15,6 +15,23 @@ const { Venues } = require("../models/venues.model.js");
 const firebaseApp = initializeApp(firebaseConfig);
 const storage = getStorage(firebaseApp);
 
+// const getAllVenueAtCityNew = asyncHandler(async(req,res)=>{
+//   console.log('Route hit');
+// try {
+//   console.log("bsdkaslf")
+//   const {venueCity} = req.query;
+//   console.log("city name fetched");
+//   if(!venueCity){
+//     return res.status(400).json(new ApiResponse(400,null,"First select the city"));
+//   }
+//   const allVenues = await Venues.find({ venueCity: venueCity });
+//   return res.status(200).json(new ApiResponse(200,{data: allVenues},"Fetched all the venue"));
+
+// } catch (error) {
+//   return res.status(error.statusCode || 500).json(new ApiResponse(500,null,"not Fetched all the venue"));
+// }
+// });
+
 const getAllSubVenuesAtVenue = asyncHandler(async (req, res) => {
   try {
     const { venueId } = req.body;
@@ -31,6 +48,7 @@ const getAllSubVenuesAtVenue = asyncHandler(async (req, res) => {
     throw new ApiError(error.statusCode || 500, error.message);
   }
 });
+
 
 const getVenueById = asyncHandler(async(req,res) => {
   try {

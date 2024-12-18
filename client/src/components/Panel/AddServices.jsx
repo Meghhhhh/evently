@@ -22,18 +22,58 @@ const AddServices = () => {
   const [booking, setBookingPolicy] = useState(parsedVendorData.booking || "");
   const [cancellation, setCancellationPolicy] = useState(parsedVendorData.cancellation || "");
   const [terms, setTermsAndConditions] = useState(parsedVendorData.terms || "");
+  const [venueArr, setVenueArr] = useState([]);
   const [venue, setVenue] = useState(parsedVendorData.venue || "");
   const [singleItems, setSingleItems] = useState(parsedVendorData.singleItems || []);
- 
+  const[cities,setCities] = useState([]);
+  const [cityName, setCityName] = useState("");
+  //const [cityName, setCityName] = useState("");
   const [editDetails, setEditDetails] = useState(localStorage.getItem("vendor") ? true : false);
+
 const userId = user._id
   useEffect(() => {
     console.log("Vendor after addit:", vendor);
   }, [vendor]);
+
+  //getting all cities
+  useEffect(()=>{
+    const getCities = async()=>{
+      try {
+       const citiesArray = await axios.get("http://localhost:8080/api/v1/cities/getAllCities");
+       console.log("arrayy",citiesArray);
+       setCities(citiesArray.data.data.data);
+       console.log("arrayy",cities);
+      } catch (error) {
+        console.error("Error fetching cities:", error);
+      }
+    };
+    getCities();
+  },[]);
+
+  useEffect(()=>{
+    const getVenues = async()=>{
+      console.log(cityName);
+      if (!cityName) return; // Avoid unnecessary fetches
+      try {
+        const venuesArray = await axios.post(
+          "http://localhost:8080/api/v1/cities/getAllVenuesAtCity",{cityName}
+        );
+        console.log(venuesArray.data.data.data)
+        setVenueArr(venuesArray.data.data.data || []); // Update venues state
+      } catch (error) {
+        console.error("Error fetching venues:", error);
+        toast.error("Failed to fetch venues.");
+      }
+    };
+    getVenues();
+    
+  },[cityName]);
+
+
   const handleSubmit = async(e) => {
     e.preventDefault();
     try {
-      console.log(serviceName,location,about,vendorType,booking,cancellation,terms,venue,singleItems,user._id)
+      console.log("in the frontend code",serviceName,location,about,vendorType,booking,cancellation,terms,venue,singleItems,user._id)
       const addedDetails = await axios.post("http://localhost:8080/api/v1/vendor/addServiceDetails",{
         serviceName,location,about,vendorType,booking,cancellation,terms,venue,singleItems,userId
       });
@@ -96,7 +136,7 @@ const userId = user._id
         serviceName, location, about, vendorType, booking, cancellation, terms,vendorId: _id,venue,singleItems
       });
       console.log(updatedDetails);
-      toast.success("Service Updated Successfully");
+      //toast.success("Service Updated Successfully");
   
       dispatch(setVendorDetails({
         _id: updatedDetails.data.data.data._id,
@@ -107,8 +147,8 @@ const userId = user._id
         booking: updatedDetails.data.data.data.booking,
         terms: updatedDetails.data.data.data.terms,
         cancellation: updatedDetails.data.data.data.cancellation,
-        venue: addedDetails.data.data.data.venue,
-        singleItems: addedDetails.data.data.data.singleItems,
+        venue: updatedDetails.data.data.data.venue,
+        singleItems: updatedDetails.data.data.data.singleItems,
        
       }));
       console.log("vendor after addo",vendor);
@@ -173,16 +213,19 @@ const userId = user._id
             </div>
 
             <div className="flex flex-col">
-              <label className="text-primaryPeach  font-semibold mb-2">Vendor Type:</label>
-              <input
-                type="text"
-                name="vendorType"
-                value={vendorType}
-                onChange={(e) => setVendorType(e.target.value)}
-                className="p-3  rounded-md bg-gray-50/20 outline-none focus:border-pink-500"
-                placeholder="Enter vendor type"
-              />
-            </div>
+  <label className="text-primaryPeach font-semibold mb-2">Vendor Type:</label>
+  <select
+    name="vendorType"
+    value={vendorType}
+    onChange={(e) => setVendorType(e.target.value)}
+    className="p-3 rounded-md bg-gray-50/20 outline-none focus:border-pink-500"
+  >
+    <option value="" disabled>Select type of vendor</option>
+    <option value="caterer">Caterer</option>
+    <option value="decorator">Decorator</option>
+    <option value="photographer">Photographer</option>
+  </select>
+</div>
 
             <div className="flex flex-col">
               <label className="text-primaryPeach  font-semibold mb-2">Booking Policy:</label>
@@ -219,17 +262,37 @@ const userId = user._id
                 rows="1"
               />
             </div>
+        
+
+
             <div className="flex flex-col">
-              <label className="text-primaryPeach font-semibold mb-2">Venue:</label>
-              <input
-                type="text"
-                name="venue"
-                value={venue}
-                onChange={(e) => setVenue(e.target.value)}
-                className="p-3 rounded-md bg-gray-50/20 outline-none focus:border-pink-500"
-                placeholder="Enter venue"
-              />
+            <label className="text-primaryPeach font-semibold mb-2">Cities:</label>
+            <select name="cities" value={cities}  onChange={(e) => setCityName(e.target.value)}>
+                <option value="" disabled>Select a city</option>
+               {
+                cities.map((city)=>(
+                  <option key={city.id} value={city.name} className="text-white">{city.cityName}</option>
+                ))
+               }
+               
+              </select>
+              </div>
+
+              <div className="flex flex-col">
+              <label className="text-primaryPeach font-semibold mb-2">Venues:</label>
+            <select name="venue" value={venue} onChange={(e)=>setVenue(e.target.value)}>
+                <option value="" disabled>Select a venue</option>
+               {
+                venueArr.map((venue)=>(
+                  <option key={venue.id} value={venue._id} className="text-white">{venue.venueName}</option>
+                ))
+               }
+               
+              </select>
+            
             </div>
+
+
             {singleItems.map((item, index) => (
               <div key={index} className="flex flex-col">
                 <label className="text-primaryPeach font-semibold mb-2">Item {index + 1}:</label>
