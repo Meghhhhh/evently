@@ -11,7 +11,7 @@ const initialState = JSON.parse(localStorage.getItem("vendor")) || {
     cancellation: "",
     packageName:"",
     price:"",
-    items:"",
+    items:"", 
     steps:"1",
     package_id:"",
     venue: "", // New field for venue ID

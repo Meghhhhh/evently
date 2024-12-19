@@ -14,6 +14,7 @@ const cityRouter = require("./routes/cities.routes.js");
 const reviewRouter = require("./routes/reviews.routes.js");
 const registrationRouter = require("./routes/registration.routes.js");
 const venueRouter = require("./routes/venues.routes.js")
+const cartRouter = require("./routes/cart.routes.js");
 
 
 // Initialize dotenv to load environment variables from a .env file
@@ -39,6 +40,7 @@ app.use("/api/v1/cities", cityRouter);
 app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/registration", registrationRouter);
 app.use("/api/v1/venues", venueRouter);
+app.use("/api/v1/cart",cartRouter);
 
 
 // Error catch configuration
