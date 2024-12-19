@@ -22,7 +22,7 @@ const Service = ({
   cancellation,
   terms,
   singleItems = [],
-  addOns
+  
 }) => {
  const {items,packagesState} = useSelector((state)=>state.cart)
 
@@ -228,7 +228,7 @@ const Service = ({
       </div>
 
       {/* addons */}
-      <div className="bg-lightGray/10 rounded-md p-10 flex flex-col gap-6">
+      {/* <div className="bg-lightGray/10 rounded-md p-10 flex flex-col gap-6">
         <h2 className="font-bold text-3xl text-primaryPeach">You Can Add Extra</h2>
         <textarea
           name="addOns"
@@ -238,7 +238,7 @@ const Service = ({
           placeholder="Enter add ons"
           rows="1"
         />
-      </div>
+      </div> */}
 
       {/* booking, terms, and cancellation */}
       <TandC booking={booking} cancellation={cancellation} terms={terms} />

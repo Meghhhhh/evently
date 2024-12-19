@@ -5,6 +5,8 @@ import { MdLocationOn } from 'react-icons/md'; // Location icon
 import { AiOutlineShoppingCart } from 'react-icons/ai'; // Shopping cart icon for packages
 import { BsInfoCircle } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
+import { MdDeleteSweep } from "react-icons/md";
+import { toast } from 'react-toastify';
 const MyServices = () => {
   const [vendors, setVendors] = useState([]);
   const user = useSelector((state) => state.user); 
@@ -22,6 +24,22 @@ const MyServices = () => {
 
     fetchVendors();
 }, []);
+
+const deleteService = async (vendorId) => {
+    try {   
+        console.log("deleted vendor", vendorId);
+        const response = await axios.delete(`http://localhost:8080/api/v1/vendor/deleteServiceDetails/${vendorId}`);
+        if (response.status === 200) {
+            toast.success("Service deleted Successfully");
+            // Update the state to reflect changes in the UI
+            setVendors(vendors.filter(vendor => vendor._id !== vendorId));
+        }
+    } catch (error) {
+        console.error('Error deleting service:', error);
+        alert('Failed to delete service');
+    }
+};
+
   return (
     <div className="w-[100%] min-h-[100vh] flex flex-col gap-30 items-center p-6 ">
       <h2 className="text-4xl pt-10 font-bold text-center text-primaryPeach mb-6">
@@ -33,12 +51,14 @@ const MyServices = () => {
                 vendors.map((vendor, index) => (
                     <div key={index} className="bg-white shadow-md rounded-md p-6 mb-6 min-h-[60%]">
                         <h3 className="text-2xl font-semibold text-primaryPeach mb-4">{vendor.serviceName}</h3>
-                        
+                        <div className='flex justify-between'>
                         <div className="flex items-center mb-2">
                             <MdLocationOn className="text-gray-600 mr-2" />
                             <p className="text-lg">{vendor.location}</p>
                         </div>
+                        <MdDeleteSweep onClick={() => deleteService(vendor._id)} className="text-gray-600 mr-2" />
 
+                        </div>
                         <div className="flex items-center mb-2">
                             <BsInfoCircle className="text-gray-600 mr-2" />
                             <p className="text-lg">{vendor.about}</p>
