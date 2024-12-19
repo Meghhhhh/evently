@@ -1,7 +1,7 @@
 import React from 'react';
 import i1 from '../assets/images/download.jpeg';
 
-const Cart = () => {
+const Cart = () => { 
   return (
     <div className="p-6 bg-gray-900 min-h-screen">
       <h1 className="text-3xl font-extrabold text-white mb-8 text-center">Your Cart</h1>

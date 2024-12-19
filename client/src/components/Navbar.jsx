@@ -43,12 +43,14 @@ const Navbar = ({ onSidebarToggle }) => {
         >
           Contact
         </a>
-        <a
-          href="#cart"
-          className="hover:bg-lightgreyplusplus hover:text-white font-bold px-3 py-1 rounded-md transition-all duration-300"
-        >
-          Cart
-        </a>
+        {isLoggedIn && (
+          <a
+            href="cart"
+            className="hover:bg-lightgreyplusplus hover:text-white font-bold px-3 py-1 rounded-md transition-all duration-300"
+          >
+            Cart
+          </a>
+        )}
       </div>
 
 
