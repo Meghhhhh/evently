@@ -5,4 +5,5 @@ const {createPackages,updatePackages,deletePackages} = require("../controllers/p
 router.post("/createPackages",createPackages)
 router.put("/updatePackages",updatePackages)
 router.delete("/deletePackages",deletePackages)
+
 module.exports = router;

@@ -88,7 +88,7 @@ const Registration = () => {
 
   return (
     <div className="bg-black min-h-screen w-full pt-20">
-      <GallerySlider slides={2} height={500} halls={halls} btn={"Add to cart"} />
+      <GallerySlider slides={2} height={500} halls={halls} btn={"Add to cart"} userId={"67647da0c8609ca55b145402"} />
       <p className="text-offwhite text-6xl pb-2 px-10 font-bold">{selectedVenue.venueName}</p>
       <div className="bg-mauve w-[40%] h-[5px] mx-10 mb-10 rounded-full"></div>
       <div className="flex flex-col md:flex-row">
