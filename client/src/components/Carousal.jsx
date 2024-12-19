@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { FaMapMarkerAlt } from "react-icons/fa";
 
 const Carousal = ({ images }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -23,7 +22,7 @@ const Carousal = ({ images }) => {
         {images.map((image, index) => (
           <div
             key={index}
-            className="w-full flex-shrink-0"
+            className="w-full flex-shrink-0 relative group"
             style={{
               backgroundImage: `url(${image.eventImages[0]})`,
               backgroundPosition: "center",
@@ -32,23 +31,29 @@ const Carousal = ({ images }) => {
               height: "400px",
             }}
           >
-            <div className="absolute bottom-0 text-white bg-black bg-opacity-30">
-              <h3 className="text-sm font-bold">{image.eventType}</h3>
-              <h3 className="text-sm font-bold">
-                {image.venue.venueName},{image.venue.venueCity}
+            <div
+              className="absolute inset-0 flex flex-col justify-center items-center text-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"
+              style={{
+                background: "rgba(0, 0, 0, 0.6)",
+                backdropFilter: "blur(5px)",
+              }}
+            >
+              <h3 className="text-lg font-bold">{image.eventType}</h3>
+              <h3 className="text-md font-bold">
+                {image.venue.venueName}, {image.venue.venueCity}
               </h3>
-              <h3 className="text-sm font-bold ove">
+              <h3 className="text-sm font-bold">
                 {image.vendors.map(
                   (vendor) =>
-                    `${vendor.vendorId.serviceName} - ${vendor.packageId.packageName}, `
-                )}
+                    `${vendor.vendorId.serviceName} - ${vendor.packageId.packageName}`
+                ).join(", ")}
               </h3>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Dots*/}
+      {/* Dots */}
       <div className="absolute inset-x-0 bottom-4 flex justify-center space-x-2">
         {images.map((_, index) => (
           <span

@@ -2,9 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { FaCity, FaMapMarkerAlt, FaCommentDots } from "react-icons/fa";
-import {setVenues} from "../features/venue/venueSlice.js"
+import { setVenues, setSelectedVenue } from "../features/venue/venueSlice.js";
 import { setSelectedCity } from "../features/city/citySlice.js";
-import { setSelectedVenue } from "../features/venue/venueSlice.js";
 import {
   Navbar,
   Modal,
@@ -16,11 +15,36 @@ import {
 } from "../components/index.js";
 import ReviewSlider from "../components/ReviewSlider.jsx";
 
+// Define custom styles for headings
+const customStyles = `
+  .heading-container {
+    position: relative;
+    display: inline-block;
+  }
+  .heading-container::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    width: 100%;
+    height: 5px;
+    border-radius: 10px;
+    background-color: #6b21a8; /* Change this color to fit your theme */
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.3s ease;
+  }
+  .heading-container:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+`;
+
 const Home = () => {
   const dispatch = useDispatch();
 
-  const { venues } = useSelector((state) => state.venue)
-  const {selectedCity} = useSelector((state) => state.city)
+  const { venues } = useSelector((state) => state.venue);
+  const { selectedCity } = useSelector((state) => state.city);
 
   const [cities, setCities] = useState([]);
   const [reviews, setReviews] = useState([]);
@@ -102,6 +126,8 @@ const Home = () => {
  
   return (
     <div className="min-h-screen">
+      <style>{customStyles}</style> {/* Inline styles for headings */}
+
       <Navbar onSidebarToggle={toggleSidebar} />
       <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
 
@@ -147,7 +173,7 @@ const Home = () => {
             key={city._id}
             isOpen={openModals[city._id]}
             onClose={() => closeModal(city._id)}
-            city = {city}
+            city={city}
             handleExploreClick={handleExploreClick}
           >
             <img
@@ -162,23 +188,25 @@ const Home = () => {
 
       {/* images carousal */}
       <div className="py-8">
-        <h2 className="text-3xl font-bold mb-6 text-center">Recent Events</h2>
+        <h2 className="text-3xl font-bold mb-6 text-center heading-container ml-3 uppercase">
+          Recent Events
+        </h2>
         <Carousal images={images} />
       </div>
 
       {/* exploring locations */}
       <div className="py-8 px-4">
-        <h2 className="text-3xl font-bold mb-6 text-center">
+        <h2 className="text-3xl font-bold mb-6 text-center heading-container uppercase">
           {`Explore locations at ${selectedCity.cityName}`}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {venues.length !== 0 ? (
             venues.map((venue) => (
               <LocationCard
-                key = {venue._id}
+                key={venue._id}
                 modal={venue}
                 message={"See Location"}
-                navigateTo={"/registration"}
+                navigateTo={"/dateSelector"}
                 dispatchAction={setSelectedVenue}
               />
             ))
@@ -195,9 +223,11 @@ const Home = () => {
 
       {/* reviews */}
       <div className="pt-5 px-4 bg-gray-900">
-        <h2 className="text-3xl font-bold mb-6 text-center">Latest Reviews</h2>
+        <h2 className="text-3xl font-bold mb-6 text-center heading-container uppercase">
+          Latest Reviews
+        </h2>
           {reviews.length !== 0 ? (
-            <ReviewSlider reviews = {reviews} /> 
+            <ReviewSlider reviews={reviews} /> 
           ) : (
             <div className="flex flex-col items-center p-6 w-screen ">
             <FaCommentDots className="text-6xl text-gray-400 mb-4" />

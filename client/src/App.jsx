@@ -35,6 +35,7 @@ import Service from "./components/Panel/Service";
 import { Navbar } from "./components";
 import History from "./components/Panel/History";
 import AddCities from "./components/Panel/AddCities";
+import CustomDatePicker from "./components/CustomDatePicker";
 
 function App() {
   const [isVisible, setIsVisible] = useState(true);
@@ -88,7 +89,7 @@ function App() {
           {/*           <Route path="/caterer" element={<Caterer />} />
           <Route path="/decorator" element={<Decorator />} />
           <Route path="/photographer" element={<Photographer />} /> */}
-
+          <Route path="/dateSelector" element={<CustomDatePicker />}/>
           <Route path="/registration" element={<Registration />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/cart" element={<Cart />} />

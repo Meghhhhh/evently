@@ -64,7 +64,7 @@ const Navbar = ({ onSidebarToggle }) => {
           />
         </div>
 
-        <div className="hidden sm:flex sm:items-center sm:justify-center sm:h-full sm:p-2">
+        <div className="hidden sm:flex sm:items-center sm:justify-center sm:h-full sm:p-2 cursor-pointer">
           <ThemeConverter />
         </div>
 

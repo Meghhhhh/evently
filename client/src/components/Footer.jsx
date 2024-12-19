@@ -6,13 +6,13 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between">
           <div className="mb-6 md:mb-0 md:w-[60%]">
-            <h3 className="text-2xl font-bold text-black">Event toolkit</h3>
+            <h3 className="text-2xl font-bold ">Event toolkit</h3>
             <p className="text-gray-400 mt-2">
               Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nulla molestiae eveniet est eum deserunt neque, culpa vero similique voluptate eos ab asperiores nesciunt voluptatem dicta ut quaerat corrupti debitis magni fugiat dolorum tempore expedita!
             </p>
           </div>
           <div className="mb-6 md:mb-0">
-            <h4 className="text-xl font-bold text-white">Contact Us</h4>
+            <h4 className="text-xl font-bold ">Contact Us</h4>
             <p className="text-gray-400 mt-2">Email: info@exploreindia.com</p>
             <p className="text-gray-400">Phone: +91 123-456-7890</p>
             <p className="text-gray-400 mt-2">

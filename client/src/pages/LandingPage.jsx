@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import image from "../assets/landing.jpg";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedCity } from "../features/city/citySlice"; 
+import { setSelectedCity } from "../features/city/citySlice";
 
 const LandingPage = ({ setIsVisible }) => {
   const [cities, setCities] = useState([]);
+  const [isCitySelected, setIsCitySelected] = useState(false); // Track city selection
   const selectedCity = useSelector((state) => state.city.selectedCity);
   const dispatch = useDispatch(); // For dispatching actions
 
@@ -26,8 +27,11 @@ const LandingPage = ({ setIsVisible }) => {
 
   const handleCityChange = (e) => {
     const selectedCityId = e.target.value;
-    const selectedCity = cities.find(city => city._id === selectedCityId);
+    const selectedCity = cities.find((city) => city._id === selectedCityId);
     dispatch(setSelectedCity(selectedCity));
+
+    // Check if a valid city is selected
+    setIsCitySelected(!!selectedCityId); // Update the state to true if a city is selected
   };
 
   return (
@@ -65,8 +69,11 @@ const LandingPage = ({ setIsVisible }) => {
             ))}
           </select>
           <button
-            className="bg-[#FF5364] hover:bg-[#FF5364]/80 px-8 py-4 rounded-lg text-xl xs:text-base mt-6 text-white"
+            className={`bg-[#FF5364] hover:bg-[#FF5364]/80 px-8 py-4 rounded-lg text-xl xs:text-base mt-6 text-white ${
+              !isCitySelected ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             onClick={() => setIsVisible(false)}
+            disabled={!isCitySelected} // Disable the button if no city is selected
           >
             Get Started
           </button>
