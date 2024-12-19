@@ -4,8 +4,11 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/autoplay";
 import { Autoplay, Navigation } from "swiper/modules";
+import {useNavigate } from 'react-router-dom'
 
 const GallerySlider = ({ slides, height, halls, btn }) => {
+  const Navigate = useNavigate();
+
   return (
     <Swiper
       spaceBetween={10}
@@ -41,7 +44,7 @@ const GallerySlider = ({ slides, height, halls, btn }) => {
             <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300 ease-in-out">
               <h2 className="text-white text-2xl font-bold mb-2">{hall.serviceName}</h2>
               <p className="text-white text-lg mb-2">{hall.about}</p>
-              <button className="bg-mauve text-white px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
+              <button className="bg-mauve text-white px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300" onClick={() => Navigate(`/vendor/${hall._id}`)}>
                 {btn}
               </button>
             </div>

@@ -3,9 +3,8 @@ import React from "react";
 const Modal = ({
   isOpen,
   handleExploreClick,
-  name,
+  city,
   onClose,
-  title,
   children,
 }) => {
   if (!isOpen) return null;
@@ -23,7 +22,7 @@ const Modal = ({
     >
       <div className="bg-white w-96 p-6 rounded-lg shadow-lg">
         <div className="flex justify-between items-center mb-4">
-          <h2 className=" text-3xl font-bold text-black capitalize">{title}</h2>
+          <h2 className=" text-3xl font-bold text-black capitalize">{city.cityName}</h2>
           <button onClick={onClose} className="text-gray-600 hover:text-black">
             ✖
           </button>
@@ -33,7 +32,7 @@ const Modal = ({
           <button
             className="px-4 py-2 w-full bg-red text-white rounded hover:bg-reddark"
             onClick={() => {
-              handleExploreClick(name);
+              handleExploreClick(city);
               onClose();
             }}
           >

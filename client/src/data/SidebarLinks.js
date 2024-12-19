@@ -31,7 +31,7 @@ export const sidebarlinks = [
   {
     id: "5",
     name: "Add venues",
-    path: "/panel/my-venues",
+    path: "/panel/add-venue",
     type: AccountType.Admin,
     icon: "VscAdd",
   },
@@ -40,5 +40,19 @@ export const sidebarlinks = [
     name: "History",
     path: "/panel/history",
     icon: "VscHistory",
+  },
+  {
+    id: "7",
+    name: "Add sub venues",
+    path: "/panel/venues",
+    type: AccountType.Admin,
+    icon: "VscAdd",
+  },
+  {
+    id: "8",
+    name: "Add city",
+    path: "/panel/add-city",
+    type: AccountType.Admin,
+    icon: "VscAdd",
   },
 ];

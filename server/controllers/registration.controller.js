@@ -78,8 +78,11 @@ exports.register = async (req, res) => {
 
 exports.addImageToEvent = async (req, res) => {
   try {
+    console.log("image api")
     const { regId } = req.body;
+    console.log(regId);
     const file = req.file;
+    console.log(file); 
 
     if (!regId) {
       throw new ApiError(404, "No such event found");
@@ -190,3 +193,46 @@ exports.getUserEvents = async (req, res) => {
   }
 };
 
+exports.getRecentEventImages = async (req, res) => {
+    try {
+      const recentEvents = await Registration.find({
+        eventImages: { $exists: true, $ne: [] } // Ensures eventImages exists and is not empty
+    })
+        .sort({ startDate: -1 })
+        .limit(3)
+        .populate(`vendors.vendorId`, 'serviceName').populate('vendors.packageId', 'packageName price').populate('venue', 'venueName venueCity')
+
+            return res
+            .status(200)
+            .json(
+              new ApiResponse(
+                200,
+                { data: recentEvents },
+                "Images added to event successfully"
+              )
+            );
+    } catch (error) {
+      return res.status(500).json(new ApiResponse(500, null, error.message));
+    }
+};
+
+exports.getEvents = async(req,res) => {
+  try {
+    console.log("api called");
+    const events = await Registration.find({});
+    if(!events){
+      throw new ApiError(404, "Event not found");
+    }
+    return res
+            .status(200)
+            .json(
+              new ApiResponse(
+                200,
+                { data: events },
+                "Event fetched successfully"
+              )
+            );
+  } catch (error) {
+    return res.status(500).json(new ApiResponse(500, null, error.message));
+  }
+}

@@ -43,7 +43,14 @@ const Navbar = ({ onSidebarToggle }) => {
         >
           Contact
         </a>
+        <a
+          href="#cart"
+          className="hover:bg-lightgreyplusplus hover:text-white font-bold px-3 py-1 rounded-md transition-all duration-300"
+        >
+          Cart
+        </a>
       </div>
+
 
       <div className="flex items-center">
         <div className="relative lg:block">
@@ -57,7 +64,7 @@ const Navbar = ({ onSidebarToggle }) => {
           />
         </div>
 
-        <div className="hidden sm:flex sm:items-center sm:justify-center sm:h-full sm:p-2">
+        <div className="hidden sm:flex sm:items-center sm:justify-center sm:h-full sm:p-2 cursor-pointer">
           <ThemeConverter />
         </div>
 

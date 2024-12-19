@@ -4,7 +4,9 @@ const {
   register,
   addImageToEvent,
   payment,
-  getUserEvents
+  getUserEvents,
+  getRecentEventImages,
+  getEvents
 } = require("../controllers/registration.controller.js");
 const multer = require("multer");
 
@@ -15,6 +17,8 @@ router.post("/registerEvent", register);
 router.post("/addImageToEvent",upload.single('eventImage'),addImageToEvent);
 router.post("/payment", payment);
 router.get("/getUserEvents", verifyJWT, getUserEvents);
+router.get("/recentEventImages",getRecentEventImages);
+router.get("/recentEvents",getEvents);
 
 module.exports = router;
 

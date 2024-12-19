@@ -50,13 +50,14 @@ const getAllSubVenuesAtVenue = asyncHandler(async (req, res) => {
 });
 
 
-const getVenueById = asyncHandler(async(req,res) => {
+const getAllVenues = asyncHandler(async(req,res) => {
+
   try {
-    const venue = await Venues.findById(req.body.venueId);
-    if(!venue) throw new ApiError(404, "No venue found");
+    const venues = await Venues.find();
+    if(venues.length === 0) throw new ApiError(404, "No venues found");
     return res
       .status(200)
-      .json(new ApiResponse(200, { data: venue }, "Venue found"));
+      .json(new ApiResponse(200, { data: venues }, "Venues found"));
   } catch (error) {
     throw new ApiError(error.statusCode || 500, error.message);
   }
@@ -108,4 +109,4 @@ const postSubVenueAtVenue = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { getAllSubVenuesAtVenue, postSubVenueAtVenue, getVenueById };
+module.exports = { getAllSubVenuesAtVenue, postSubVenueAtVenue, getAllVenues };

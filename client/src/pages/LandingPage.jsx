@@ -1,8 +1,39 @@
-
-import React from "react";
+import React, { useEffect, useState } from "react";
 import image from "../assets/landing.jpg";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedCity } from "../features/city/citySlice";
 
 const LandingPage = ({ setIsVisible }) => {
+  const [cities, setCities] = useState([]);
+  const [isCitySelected, setIsCitySelected] = useState(false); // Track city selection
+  const selectedCity = useSelector((state) => state.city.selectedCity);
+  const dispatch = useDispatch(); // For dispatching actions
+
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/api/v1/cities/getAllCitiesExceptSelected"
+        );
+        setCities(response?.data?.data?.data);
+      } catch (error) {
+        console.error("Error fetching cities:", error);
+      }
+    };
+
+    fetchCities();
+  }, []);
+
+  const handleCityChange = (e) => {
+    const selectedCityId = e.target.value;
+    const selectedCity = cities.find((city) => city._id === selectedCityId);
+    dispatch(setSelectedCity(selectedCity));
+
+    // Check if a valid city is selected
+    setIsCitySelected(!!selectedCityId); // Update the state to true if a city is selected
+  };
+
   return (
     <div className="flex flex-col items-center justify-center">
       <section className="relative w-full h-screen">
@@ -23,18 +54,26 @@ const LandingPage = ({ setIsVisible }) => {
             </p>
           </header>
           <h2 className="text-3xl xs:text-xl font-semibold mb-6">
-            Select Your Event Type
+            Select Your City
           </h2>
-          <select className="w-2/3 p-3 border border-gray-300 rounded-lg shadow-sm text-lg xs:text-base outline-none bg-black/20">
-            <option value="">Choose an Event Type</option>
-            <option value="wedding">Wedding</option>
-            <option value="birthday">Birthday</option>
-            <option value="conference">Conference</option>
-            <option value="corporate">Corporate Meeting</option>
+          <select
+            className="w-2/3 p-3 border border-gray-300 rounded-lg shadow-sm text-lg xs:text-base outline-none bg-black/20"
+            value={selectedCity?._id || ""}
+            onChange={handleCityChange}
+          >
+            <option value="">Choose a City</option>
+            {cities.map((city) => (
+              <option key={city._id} value={city._id}>
+                {city.cityName}
+              </option>
+            ))}
           </select>
           <button
-            className="bg-[#FF5364] hover:bg-[#FF5364]/80 px-8 py-4 rounded-lg text-xl xs:text-base mt-6 text-white"
+            className={`bg-[#FF5364] hover:bg-[#FF5364]/80 px-8 py-4 rounded-lg text-xl xs:text-base mt-6 text-white ${
+              !isCitySelected ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             onClick={() => setIsVisible(false)}
+            disabled={!isCitySelected} // Disable the button if no city is selected
           >
             Get Started
           </button>
@@ -45,4 +84,3 @@ const LandingPage = ({ setIsVisible }) => {
 };
 
 export default LandingPage;
-
