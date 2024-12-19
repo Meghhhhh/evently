@@ -9,6 +9,7 @@ const {
   deleteCity,
   deleteVenueAtCity,
   updateCity,
+  getAllCities
 } = require("../controllers/cities.controller.js");
 const multer = require("multer");
 
@@ -22,5 +23,6 @@ router.post("/postVenueAtCity", upload.single("image"),postVenueAtCity);
 router.delete("/deleteCity", deleteCity);
 router.post("/deleteVenueAtCity", deleteVenueAtCity);
 router.put("/updateCity", updateCity);
+router.get("/getAllCities", getAllCities);
 
 module.exports = router;

@@ -7,7 +7,8 @@ const upload = multer({ storage: multer.memoryStorage() });
 router.post("/getVendorDetails",getVendorDetails)
 router.post("/addServiceDetails",addServiceDetails)
 router.put("/updateServiceDetails",updateServiceDetails)
-router.delete("/deleteServiceDetails",deleteServiceDetails)
+router.delete("/deleteServiceDetails/:vendorId", deleteServiceDetails);
+
 router.get("/getAllCaterer",getAllCaterer)
 router.get("/getAllPhotographer",getAllPhotographer)
 router.get("/getAllDecorator",getAllDecorator)

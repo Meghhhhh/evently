@@ -11,6 +11,8 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 router.post("/getAllSubVenuesAtVenue", getAllSubVenuesAtVenue);
 router.post("/postSubVenueAtVenue", upload.single("image"), postSubVenueAtVenue);
+
 router.get("/getAllVenues", getAllVenues);
+
 
 module.exports = router;
