@@ -120,7 +120,7 @@ const updatePackages = asyncHandler(async (req, res) => {
       const vendorWithUpdatedPackage = await Vendor.findOne({
         packages: packageId,
       }).populate("packages");
-  
+  console.log(vendorWithUpdatedPackage)
       return res.status(200).json(
         new ApiResponse(200, { data: vendorWithUpdatedPackage }, "Package updated successfully")
       );
