@@ -5,6 +5,7 @@ import vendorReducer from "../features/vendorSlice";
 import venueReducer from "../features/venue/venueSlice.js"
 import cartReducer from "../features/cartSlice.js"
 import cityReducer from "../features/city/citySlice.js";
+import dateReducer from "../features/date/dateSlice.js"
 
 
 export const store = configureStore({
@@ -15,7 +16,7 @@ export const store = configureStore({
 
     venue: venueReducer,
     cart:cartReducer,
-    city:cityReducer
-
+    city:cityReducer,
+    date: dateReducer
   },
 });
