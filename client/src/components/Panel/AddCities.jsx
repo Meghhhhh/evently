@@ -1,26 +1,27 @@
 import axios from "axios";
 import React, { useRef, useState } from "react";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
+import { hourglass } from "ldrs";
+
+hourglass.register();
 
 const AddCities = () => {
   const cityNameRef = useRef(null);
   const cityDescriptionRef = useRef(null);
   const imageRef = useRef(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [imageName, setImageName] = useState("");
+  const [loader, setLoader] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoader(true);
 
     const formData = new FormData();
     formData.append("cityName", cityNameRef.current.value || "");
-    formData.append(
-      "cityDescription",
-      cityDescriptionRef.current.value || ""
-    );
+    formData.append("cityDescription", cityDescriptionRef.current.value || "");
     formData.append("image", imageRef.current.files[0] || "");
 
     try {
@@ -36,9 +37,9 @@ const AddCities = () => {
 
       if (response.data.statusCode === 200) {
         toast.success("City added successfully!");
-        setTimeout(()=>{
-          navigate("/panel/cities")
-        }, 2000)
+        setTimeout(() => {
+          navigate("/panel/cities");
+        }, 2000);
       }
     } catch (error) {
       if (error.response && error.response.data) {
@@ -47,6 +48,8 @@ const AddCities = () => {
       } else {
         toast.error("An unexpected error occurred.");
       }
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -125,9 +128,18 @@ const AddCities = () => {
 
           <button
             type="submit"
-            className="w-full p-3 bg-primaryPeach hover:bg-red-600 text-white font-semibold rounded-lg"
+            className="w-full p-3 bg-primaryPeach hover:bg-red-600 text-white font-semibold rounded-lg h-[60px] text-lg"
           >
-            Add City
+            {loader ? (
+              <l-hourglass
+                size="30"
+                bg-opacity="0.1"
+                speed="1.75"
+                color="black"
+              ></l-hourglass>
+            ) : (
+              "Add City"
+            )}
           </button>
         </form>
       </div>

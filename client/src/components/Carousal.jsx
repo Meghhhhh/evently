@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 const Carousal = ({ images }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -8,7 +9,7 @@ const Carousal = ({ images }) => {
       setCurrentIndex((prevIndex) =>
         prevIndex === images.length - 1 ? 0 : prevIndex + 1
       );
-    }, 3000); 
+    }, 3000);
 
     return () => clearInterval(intervalId);
   }, [images.length]);
@@ -24,15 +25,24 @@ const Carousal = ({ images }) => {
             key={index}
             className="w-full flex-shrink-0"
             style={{
-              backgroundImage: `url(${image.src})`,
+              backgroundImage: `url(${image.eventImages[0]})`,
               backgroundPosition: "center",
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
-              height: "400px", 
+              height: "400px",
             }}
           >
-            <div className="flex justify-center items-center h-full text-white bg-black bg-opacity-30">
-              <h3 className="text-2xl font-bold">{image.alt}</h3>
+            <div className="absolute bottom-0 text-white bg-black bg-opacity-30">
+              <h3 className="text-sm font-bold">{image.eventType}</h3>
+              <h3 className="text-sm font-bold">
+                {image.venue.venueName},{image.venue.venueCity}
+              </h3>
+              <h3 className="text-sm font-bold ove">
+                {image.vendors.map(
+                  (vendor) =>
+                    `${vendor.vendorId.serviceName} - ${vendor.packageId.packageName}, `
+                )}
+              </h3>
             </div>
           </div>
         ))}

@@ -4,24 +4,31 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
+import { hourglass } from "ldrs";
+
+hourglass.register();
 
 const AddVenue = () => {
   const venueNameRef = useRef(null);
   const venueCityRef = useRef(null);
   const venueDescriptionRef = useRef(null);
   const imageRef = useRef(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { selectedCity } = useSelector((state) => state.city);
   const [imageName, setImageName] = useState("");
+  const [loader, setLoader] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoader(true);
 
     const formData = new FormData();
     formData.append("venueName", venueNameRef.current.value || "");
     formData.append(
       "venueCity",
-      selectedCity?.cityName ? selectedCity.cityName : venueCityRef.current.value
+      selectedCity?.cityName
+        ? selectedCity.cityName
+        : venueCityRef.current.value
     );
     formData.append(
       "venueDescription",
@@ -42,9 +49,9 @@ const AddVenue = () => {
 
       if (response.data.statusCode === 200) {
         toast.success("Venue added successfully!");
-        setTimeout(()=>{
-          navigate("/panel/cities")
-        }, 2000)
+        setTimeout(() => {
+          navigate("/panel/cities");
+        }, 2000);
       }
     } catch (error) {
       if (error.response && error.response.data) {
@@ -53,6 +60,8 @@ const AddVenue = () => {
       } else {
         toast.error("An unexpected error occurred.");
       }
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -98,7 +107,7 @@ const AddVenue = () => {
               placeholder="Enter venue city"
               className="w-full p-3 rounded-lg bg-gray-700 text-gray-300"
               value={selectedCity?.cityName || ""}
-              disabled={!!selectedCity}  
+              disabled={!!selectedCity}
             />
           </div>
 
@@ -146,9 +155,18 @@ const AddVenue = () => {
 
           <button
             type="submit"
-            className="w-full p-3 bg-primaryPeach hover:bg-red-600 text-white font-semibold rounded-lg"
+            className="w-full p-3 bg-primaryPeach hover:bg-red-600 text-white font-semibold rounded-lg h-[60px] text-lg"
           >
-            Add Venue
+            {loader ? (
+              <l-hourglass
+                size="30"
+                bg-opacity="0.1"
+                speed="1.75"
+                color="black"
+              ></l-hourglass>
+            ) : (
+              "Add Venue"
+            )}
           </button>
         </form>
       </div>

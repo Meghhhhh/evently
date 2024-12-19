@@ -11,29 +11,14 @@ import {
   ModalButton,
   LocationCard,
   Footer,
-  ReviewCard,
   Carousal,
   Sidebar,
 } from "../components/index.js";
-// import ReviewSlider from "../components/ReviewSlider.jsx";
+import ReviewSlider from "../components/ReviewSlider.jsx";
 
 const Home = () => {
   const dispatch = useDispatch();
 
-  const images = [
-    {
-      src: "https://imgs.search.brave.com/VSRlleNOw75OCz3Eh-mDotX0sOSSReg7Xyhl70wv85E/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAxOS8w/My8xMi8yMC8xOS9p/bmRpYS00MDUxNzUz/XzY0MC5qcGc",
-      alt: "Event 1",
-    },
-    {
-      src: "https://imgs.search.brave.com/VSRlleNOw75OCz3Eh-mDotX0sOSSReg7Xyhl70wv85E/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAxOS8w/My8xMi8yMC8xOS9p/bmRpYS00MDUxNzUz/XzY0MC5qcGc",
-      alt: "Event 2",
-    },
-    {
-      src: "https://imgs.search.brave.com/VSRlleNOw75OCz3Eh-mDotX0sOSSReg7Xyhl70wv85E/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAxOS8w/My8xMi8yMC8xOS9p/bmRpYS00MDUxNzUz/XzY0MC5qcGc",
-      alt: "Event 3",
-    },
-  ];
   const { venues } = useSelector((state) => state.venue)
   const {selectedCity} = useSelector((state) => state.city)
 
@@ -41,14 +26,14 @@ const Home = () => {
   const [reviews, setReviews] = useState([]);
   const [openModals, setOpenModals] = useState({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [images, setImages] = useState([]);
   const containerRef = useRef(null);
-  // const [selectedCity, setSelectedCity] = useState(null);
 
   useEffect(() => {
     const getCities = async () => {
       const response = await axios.post(
         "http://localhost:8080/api/v1/cities/getAllCitiesExceptSelected",
-        { excludedCity: selectedCity.cityName ? selectedCity.cityName : "City1111" }
+        { excludedCity: selectedCity?.cityName ? selectedCity.cityName : "City1111" }
       );
       if (response.data.statusCode <= 200)
         setCities(response?.data?.data?.data);
@@ -81,6 +66,16 @@ const Home = () => {
     };
     getVenues();
   }, [selectedCity]);
+
+  useEffect(() => {
+    const getImages = async() => {
+      const response = await axios.get("http://localhost:8080/api/v1/registration/recentEventImages");
+
+      if (response.data.statusCode <= 200)
+        setImages(response?.data?.data?.data);
+    }
+    getImages();
+  }, [])
 
   const openModal = (modalId) => {
     setOpenModals({ ...openModals, [modalId]: true });
@@ -174,7 +169,7 @@ const Home = () => {
       {/* exploring locations */}
       <div className="py-8 px-4">
         <h2 className="text-3xl font-bold mb-6 text-center">
-          Explore Locations at Your City
+          {`Explore locations at ${selectedCity.cityName}`}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {venues.length !== 0 ? (
@@ -199,11 +194,10 @@ const Home = () => {
       </div>
 
       {/* reviews */}
-      <div className="py-8 px-4 bg-gray-900">
+      <div className="pt-5 px-4 bg-gray-900">
         <h2 className="text-3xl font-bold mb-6 text-center">Latest Reviews</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {reviews.length !== 0 ? (
-            reviews.slice(0, 9).map((review) => <ReviewCard key={review._id} review={review} />)
+            <ReviewSlider reviews = {reviews} /> 
           ) : (
             <div className="flex flex-col items-center p-6 w-screen ">
             <FaCommentDots className="text-6xl text-gray-400 mb-4" />
@@ -212,8 +206,6 @@ const Home = () => {
             </h1>
           </div>
           )}
-        </div>
-        {/* <ReviewSlider reviews = {reviews} /> */}
       </div>
 
       {/* footer */}

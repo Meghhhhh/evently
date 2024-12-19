@@ -200,18 +200,14 @@ exports.getRecentEventImages = async (req, res) => {
     })
         .sort({ startDate: -1 })
         .limit(3)
-        .select('eventImages');
-
-    // Filter out events that have no images
-    const eventsWithImages = recentEvents.filter(event => event.eventImages && event.eventImages.length > 0);
-
+        .populate(`vendors.vendorId`, 'serviceName').populate('vendors.packageId', 'packageName price').populate('venue', 'venueName venueCity')
 
             return res
             .status(200)
             .json(
               new ApiResponse(
                 200,
-                { data: eventsWithImages.map(event => event.eventImages) },
+                { data: recentEvents },
                 "Images added to event successfully"
               )
             );

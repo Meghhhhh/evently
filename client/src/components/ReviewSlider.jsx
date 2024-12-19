@@ -11,7 +11,6 @@ import ReactStars from "react-rating-stars-component";
 import axios from 'axios'
 
 
-
   // const reviews = [
   //   {
   //     user: "Priyal Rawal",
@@ -67,8 +66,8 @@ import axios from 'axios'
 
 
 
+  function ReviewSlider({ reviews }) {
   const truncateWords = 20; 
-function ReviewSlider({ reviews }) {
 
   return (
     <div className="text-white">
@@ -98,7 +97,7 @@ function ReviewSlider({ reviews }) {
         >
           {reviews.map((review, i) => (
             <SwiperSlide key={i}>
-              <div className="flex flex-col gap-3 bg-richblack-800 p-3 text-[14px] text-offwhite">
+              <div className="flex flex-col gap-3 bg-richblack-800 p-3 text-[14px] text-offwhite border-2 rounded-md">
                 <div className="flex items-center gap-4">
                   <img
                     src={

@@ -4,18 +4,23 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
+import { hourglass } from "ldrs";
+
+hourglass.register();
 
 const AddSubVenue = () => {
   const subVenueNameRef = useRef(null);
   const subVenuePriceRef = useRef(null);
   const subVenueDescriptionRef = useRef(null);
   const imageRef = useRef(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [imageName, setImageName] = useState("");
+  const [loader, setLoader] = useState(false);
   const { selectedVenue } = useSelector((state) => state.venue);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoader(true);
 
     const formData = new FormData();
     formData.append("subVenueName", subVenueNameRef.current.value || "");
@@ -40,9 +45,9 @@ const AddSubVenue = () => {
 
       if (response.data.statusCode === 200) {
         toast.success("Sub Venue added successfully!");
-        setTimeout(()=>{
-          navigate("/panel/venues")
-        }, 2000)
+        setTimeout(() => {
+          navigate("/panel/venues");
+        }, 2000);
       }
     } catch (error) {
       if (error.response && error.response.data) {
@@ -51,6 +56,8 @@ const AddSubVenue = () => {
       } else {
         toast.error("An unexpected error occurred.");
       }
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -142,9 +149,18 @@ const AddSubVenue = () => {
 
           <button
             type="submit"
-            className="w-full p-3 bg-primaryPeach hover:bg-red-600 text-white font-semibold rounded-lg"
+            className="w-full p-3 bg-primaryPeach hover:bg-red-600 text-white font-semibold rounded-lg h-[60px] text-lg"
           >
-            Add Sub Venue
+            {loader ? (
+              <l-hourglass
+                size="30"
+                bg-opacity="0.1"
+                speed="1.75"
+                color="black"
+              ></l-hourglass>
+            ) : (
+              "Add Sub Venue"
+            )}
           </button>
         </form>
       </div>
