@@ -47,38 +47,38 @@ const AddPackages = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(isediting){
-      try {
-        console.log("Inside is editing",editPackageId,packageName,price,items)
-        const updated = await axios.put("http://localhost:8080/api/v1/package/updatePackages", {
-          packageId: editPackageId,
-          packageName,
-          price,
-          items
-      })
-        const newPack = updated?.data?.data?.data?.packages;
-        console.log("newPack",newPack);
-        setCurrentPackage(newPack)
-        console.log("curr",currentPackage)
-        toast.success("Package edited successfully", {
-          autoClose: 1500,
-          closeButton: false,
-        });
-        setIsEditing(false);
-        setPackageName("");
-        setPackagePrice("");
-        setItems([]);
-        setEditPackageId("")
-      } catch (error) {
-        console.error("Error updating package:", error);
-        toast.error("Error updating package", {
-          autoClose: 1500,
-          closeButton: false,
-        });
-      }
+    // if(isediting){
+    //   try {
+    //     console.log("Inside is editing",editPackageId,packageName,price,items)
+    //     const updated = await axios.put("http://localhost:8080/api/v1/package/updatePackages", {
+    //       packageId: editPackageId,
+    //       packageName,
+    //       price,
+    //       items
+    //   })
+    //     const newPack = updated?.data?.data?.data?.packages;
+    //     console.log("newPack",newPack);
+    //     setCurrentPackage(newPack)
+    //     console.log("curr",currentPackage)
+    //     toast.success("Package edited successfully", {
+    //       autoClose: 1500,
+    //       closeButton: false,
+    //     });
+    //     setIsEditing(false);
+    //     setPackageName("");
+    //     setPackagePrice("");
+    //     setItems([]);
+    //     setEditPackageId("")
+    //   } catch (error) {
+    //     console.error("Error updating package:", error);
+    //     toast.error("Error updating package", {
+    //       autoClose: 1500,
+    //       closeButton: false,
+    //     });
+    //   }
      
-    }
-    else{
+    // }
+ //   else{
     console.log(packageName, price, items, vendorId);
     try {
       const packageDetails = await axios.post(
@@ -98,7 +98,7 @@ const AddPackages = () => {
       // const packageName2 = currPackage.packageName;
       // const price2 = currPackage.price;
       // const items2 = currPackage.items;
-      console.log(currPackage);
+      console.log(currPackage);//last package added 
       
       dispatch(
         setPackagedetails({
@@ -128,7 +128,7 @@ const AddPackages = () => {
         closeButton: false,
       });
     }
-  }
+  //}
   };
   const handleDeletePackage = async (packageId) => {
     try {
@@ -154,16 +154,16 @@ const AddPackages = () => {
       });
     }
   };
-  const handleEdit = async(packageId,packageName,price,items)=>{
-    setPackageName(packageName);
-    setPackagePrice(price);
-    setItems(items);
-    setIsEditing(true);
-    console.log("pid",packageId,editPackageId);
-    setEditPackageId(packageId);
-    console.log("pid2",packageId,editPackageId);
+  // const handleEdit = async(packageId,packageName,price,items)=>{
+  //   setPackageName(packageName);
+  //   setPackagePrice(price);
+  //   setItems(items);
+  //   setIsEditing(true);
+  //   console.log("pid",packageId,editPackageId);
+  //   setEditPackageId(packageId);
+  //   console.log("pid2",packageId,editPackageId);
     
-  }
+  // }
   return (
     <div className=" w-[100%] min-h-[100vh] flex flex-col items-center">
       <h2 className="text-4xl pt-10 font-bold text-center text-primaryPeach mb-6">
@@ -248,7 +248,8 @@ const AddPackages = () => {
       <ToastContainer
         style={{ zIndex: 9999 }} // Adjust the z-index as needed
       />
-        {currentPackage.length > 0 && <ShowPackage currentPackage={currentPackage} onDeletePackage={handleDeletePackage} onUpdatePackage={handleEdit}/>}
+        {/* {currentPackage.length > 0 && <ShowPackage currentPackage={currentPackage} onDeletePackage={handleDeletePackage} onUpdatePackage={handleEdit}/>} */}
+        {currentPackage.length > 0 && <ShowPackage currentPackage={currentPackage} onDeletePackage={handleDeletePackage}/>}
 
 
     </div>

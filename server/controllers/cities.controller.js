@@ -40,7 +40,14 @@ const getAllCitiesExceptSelected = asyncHandler(async (req, res) => {
       .json(new ApiResponse(error.statusCode || 500, null, error.message));
   }
 });
-
+const getAllCities = asyncHandler(async(req,res)=>{
+  try {
+    const allCities = await Cities.find();
+    return res.status(200).json(new ApiResponse(200,{data: allCities},"Fetched all the cities"));
+  } catch (error) {
+    return res.status(error.statusCode || 500).json(new ApiResponse(500,null,"not Fetched all the cities"));
+  }
+});
 const getCityById = asyncHandler(async (req, res) => {
   try {
     if (!req.body.id) {
@@ -65,8 +72,9 @@ const getCityById = asyncHandler(async (req, res) => {
 
 const getAllVenuesAtCity = asyncHandler(async (req, res) => {
   try {
-    const { cityName } = req.body;
 
+    const { cityName } = req.body;
+console.log(cityName);
     if (!cityName) {
       throw new ApiError(400, "City name is required");
     }
@@ -284,4 +292,5 @@ module.exports = {
   deleteCity,
   deleteVenueAtCity,
   updateCity,
+  getAllCities
 };

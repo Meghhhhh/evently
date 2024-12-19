@@ -5,12 +5,13 @@ import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import axios from 'axios';
-const ShowPackage = ({currentPackage,onDeletePackage,onUpdatePackage}) => { 
+const ShowPackage = ({currentPackage,onDeletePackage}) => { 
     const {vendor,_id} = useSelector((state)=>state.vendor);
     const [packages, setPackages] = useState(Array.isArray(currentPackage) ? currentPackage : [currentPackage]);
     useEffect(() => {
-      
+        console.log(currentPackage);
         setPackages(Array.isArray(currentPackage) ? currentPackage : [currentPackage]);
+        console.log("packages inside show",packages);
     }, [currentPackage]);
    
 
@@ -45,7 +46,7 @@ const ShowPackage = ({currentPackage,onDeletePackage,onUpdatePackage}) => {
             </div>
           </details>
           <div className='flex gap-5'>
-              <button onClick={() => onUpdatePackage(pkg.package_id,pkg.packageName,pkg.price,pkg.items)} ><AiFillEdit fontSize={23}/></button>
+              {/* <button onClick={() => onUpdatePackage(pkg.package_id,pkg.packageName,pkg.price,pkg.items)} ><AiFillEdit fontSize={23}/></button> */}
               <button onClick={() => onDeletePackage(pkg.package_id)}><MdDelete fontSize={23}/></button>
               </div>
               </div>
