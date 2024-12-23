@@ -12,6 +12,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItemToCart, removeItemFromCart,addPackageToCart,removePackageFromCart,selectTotalItemAmount,selectTotalPackageAmount, selectGrandTotal } from "../../features/cartSlice";
 import { useEffect } from "react";
 import "../../index.css"
+import { useNavigate } from "react-router-dom";
+import { getPackageNames } from '../../features/cartSlice';
+
 const Service = ({
   gallery = [],
   serviceName,
@@ -24,14 +27,69 @@ const Service = ({
   singleItems = [],
   
 }) => {
+  const navigate = useNavigate(); 
+  const packageNames = useSelector(getPackageNames);
+  const safePackageNames = Array.isArray(packageNames) ? packageNames : [];
  const {items,packagesState} = useSelector((state)=>state.cart)
-
+const {user} = useSelector((state)=>state.user);
   const totalItemAmount = useSelector(selectTotalItemAmount);
   const totalPackageAmount = useSelector(selectTotalPackageAmount);
   const grandTotal = useSelector(selectGrandTotal);
   const [quantities, setQuantities] = useState([]);
   const [pkgQuantity, setPkgQuantity] = useState([]);
+  const [itemQuantity, setItemQuantity] = useState([]);
+  const [pkgName, setPkgName] = useState([]);
+  const [itmArr, setItmArr] = useState([]);
+  const [pkgArr, setPkgArr] = useState([]);
+  
   const dispatch = useDispatch();
+
+  const handleAddToCart = () => {
+  //  const addedResponse = axios.post("",{
+  //   userId: user._id,  
+  //   isVenue: false,    
+  //   serviceName,
+  //   grandTotal,
+  //   itmArr,
+  //   pkgArr
+  // });
+  //  navigate("/cart");
+  };
+
+  useEffect(() => {
+ 
+    const totItems = quantities.reduce((acc, qty) => acc + qty, 0);
+    const totPkg = pkgQuantity.reduce((acc, qty) => acc + qty, 0);
+  
+    const itmArrNew = {
+      itemPrice: totalItemAmount, 
+      itemQuantity: totItems, 
+    };//just an object
+  
+    const pkgArrNew = pkgQuantity.map((pkgQty, index) => ({
+      packagePrice: totalPackageAmount,
+      packageQuantity: totPkg,
+      packageName:  pkgName.map(pkg => pkg.packageName), 
+    }));//array of objects
+    console.log("Total items quantity:", totItems);
+    console.log("Total packages quantity:", totPkg);
+    console.log("itmArr", itmArrNew);
+    console.log("pkgArr", pkgArrNew);
+    setItmArr(itmArrNew);
+    setPkgArr(pkgArrNew);
+  
+  }, [quantities, pkgQuantity, totalItemAmount, totalPackageAmount, pkgName]);
+  
+
+  useEffect(() => {
+    const names = packageNames.payload.cart.packagesState;
+    setPkgName(names);
+    console.log("Package Names:", packageNames.payload.cart.packagesState); 
+  }, [packageNames]);
+
+
+
+
   useEffect(() => {
     
     if (singleItems.length > 0) {
@@ -248,7 +306,7 @@ const Service = ({
 
   <div class="flex justify-between mb-2">
     <div class="text-gray-600">Item Quantity</div>
-    <div class="font-semibold text-gray-900">{quantities.reduce((acc, qty) => acc + qty, 0)}</div>
+    <div class="font-semibold text-gray-900" >{quantities.reduce((acc, qty) => acc + qty, 0)}</div>
   </div>
   <div class="flex justify-between mb-4">
     <div class="text-gray-600">Item Price</div>
@@ -263,6 +321,17 @@ const Service = ({
     <div class="text-gray-600">Package Price</div>
     <div class="font-semibold text-gray-900">{formatNumber(totalPackageAmount)}</div>
   </div>
+ 
+  <div class="flex justify-between mb-4">
+  <div>
+      <h3 className="text-black">Selected Packages:</h3>
+      <ul>
+        {pkgName.map((pkg, index) => (
+          <li key={index}  className="text-black">{pkg.packageName}</li>
+        ))}
+      </ul>
+    </div>
+  </div>
 
   <div class="border-t border-gray-300 my-4"></div>
   <div class="flex justify-between text-lg font-bold text-gray-900">
@@ -270,8 +339,8 @@ const Service = ({
     <span>{formatNumber(grandTotal)}</span>
   </div>
 
-  <button class="mt-6 w-full bg-primaryPeach text-white py-2 rounded-lg font-medium hover:bg-primaryPeach/90">
-    View Cart
+  <button class="mt-6 w-full bg-primaryPeach text-white py-2 rounded-lg font-medium hover:bg-primaryPeach/90" onClick={handleAddToCart} navigate>
+    Add to Cart
   </button>
 </div>)}
     

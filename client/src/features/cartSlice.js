@@ -86,7 +86,9 @@ const cartSlice = createSlice({
           }
         }
       },
-   
+      getPackageNames: (state) => {
+        return state.packagesState.map(pkg => pkg.packageName);  
+      },  
     clearCart: (state) => {
       state.items = [];
       state.packagesState = [];
@@ -100,7 +102,7 @@ export const {
   removeItemFromCart,
   addPackageToCart,
   removePackageFromCart,
-  clearCart,
+  clearCart,getPackageNames
 } = cartSlice.actions;
 
 export const selectTotalItemAmount = (state) => {
