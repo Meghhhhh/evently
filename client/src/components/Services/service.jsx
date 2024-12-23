@@ -14,7 +14,9 @@ import { useEffect } from "react";
 import "../../index.css"
 import { useNavigate } from "react-router-dom";
 import { getPackageNames } from '../../features/cartSlice';
-
+import axios from "axios";
+import { setUserDetails } from "../../features/user/userSlice";
+import { toast } from "react-toastify";
 const Service = ({
   gallery = [],
   serviceName,
@@ -31,7 +33,7 @@ const Service = ({
   const packageNames = useSelector(getPackageNames);
   const safePackageNames = Array.isArray(packageNames) ? packageNames : [];
  const {items,packagesState} = useSelector((state)=>state.cart)
-const {user} = useSelector((state)=>state.user);
+ const user = useSelector((state) => state.user);
   const totalItemAmount = useSelector(selectTotalItemAmount);
   const totalPackageAmount = useSelector(selectTotalPackageAmount);
   const grandTotal = useSelector(selectGrandTotal);
@@ -41,20 +43,64 @@ const {user} = useSelector((state)=>state.user);
   const [pkgName, setPkgName] = useState([]);
   const [itmArr, setItmArr] = useState([]);
   const [pkgArr, setPkgArr] = useState([]);
-  
+ 
   const dispatch = useDispatch();
 
-  const handleAddToCart = () => {
-  //  const addedResponse = axios.post("",{
-  //   userId: user._id,  
-  //   isVenue: false,    
-  //   serviceName,
-  //   grandTotal,
-  //   itmArr,
-  //   pkgArr
-  // });
-  //  navigate("/cart");
+  useEffect(()=>{
+    const fetchUserDetails = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/api/v1/users/current-user",
+          { withCredentials: true }
+        );
+        const obj = response.data.data;
+        console.log("hey user here",obj);
+                dispatch(
+                  setUserDetails({
+                    _id: obj._id,
+                    email: obj.email,
+                    firstName: obj.firstName,
+                    lastName: obj.lastName,
+                    userType: obj.userType,
+                    contactNumber: obj.contactNumber,
+                  })
+                );
+                 toast.success(" fetching user details!", {
+                          autoClose: 1500,
+                          closeButton: false,
+                        });
+  }
+  catch{
+     toast.error("error fetching user details!", {
+              autoClose: 1500,
+              closeButton: false,
+            });
+  }
+};
+fetchUserDetails();
+},[]);
+  const handleAddToCart = async () => {
+    try {
+      
+      console.log(user);
+      const addedResponse = await axios.post("http://localhost:8080/api/v1/cart/addToCart", {
+       
+        userId: user._id,
+        isVenue: false,
+        name: serviceName, // Changed to 'name'
+        totalPrice: grandTotal, // Changed to 'totalAmount'
+        items: itmArr, // Changed to 'items'
+        package: pkgArr, // Changed to 'packages'
+      });
+      if (addedResponse.status === 200) {
+        navigate("/cart");
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error.message);
+      // Show a user-friendly error message
+    }
   };
+  
 
   useEffect(() => {
  
@@ -67,9 +113,11 @@ const {user} = useSelector((state)=>state.user);
     };//just an object
   
     const pkgArrNew = pkgQuantity.map((pkgQty, index) => ({
-      packagePrice: totalPackageAmount,
-      packageQuantity: totPkg,
       packageName:  pkgName.map(pkg => pkg.packageName), 
+      packageQuantity: totPkg,
+      packagePrice: totalPackageAmount,
+     
+      
     }));//array of objects
     console.log("Total items quantity:", totItems);
     console.log("Total packages quantity:", totPkg);
