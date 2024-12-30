@@ -5,7 +5,8 @@ const Cart = require("../models/cart.model.js");
 exports.addToCart = async (req, res) => {
   try {
     const { userId, isVenue, name, totalPrice, items, package } = req.body;
-    console.log(req.body);
+    console.log("inside api");
+    console.log(req.body);  
 
     // Validate required fields
     if (
@@ -14,20 +15,8 @@ exports.addToCart = async (req, res) => {
       throw new ApiError(400, "All fields are required");
     }
 
-    // Check if cart already exists for the user
-    let cart = await Cart.findOne({ userId });
-    if (cart) {
-      // If a cart exists, we update it
-      cart.isVenue = isVenue;
-      cart.name = name;
-      cart.totalPrice = totalPrice;
-      cart.items = items;
-      cart.package = package;
-      await cart.save();
-      return res.status(200).json(new ApiResponse(200, { data: cart }, "Cart updated successfully"));
-    } else {
       // If no cart exists for the user, create a new one
-      cart = await Cart.create({
+      let cart = await Cart.create({
         userId,
         isVenue,
         name,
@@ -37,11 +26,11 @@ exports.addToCart = async (req, res) => {
       });
       await cart.save();
       return res.status(200).json(new ApiResponse(200, { data: cart }, "Added to cart successfully"));
-    }
+    
   } catch (error) {
     throw new ApiError(500, "Something went wrong", error.message);
   }
-};
+}; 
 
 exports.removeFromCart = async (req, res) => {
   try {
