@@ -23,7 +23,7 @@ const Payment = () => {
           const cartData = response.data.data.data.map((item) => ({
             name: item.name || "Unknown Product",
             image: item.productImage || "https://via.placeholder.com/150",
-            price: (item.totalPrice || 0) * 1, // Convert price to cents
+            price: Math.round((item.totalPrice || 0) * 100), // Convert price to cents
             quantity: item.productQuantity || 1,
           }));
 
