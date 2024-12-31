@@ -112,13 +112,11 @@ fetchUserDetails();
       itemQuantity: totItems, 
     };//just an object
   
-    const pkgArrNew = pkgQuantity.map((pkgQty, index) => ({
+    const pkgArrNew = {
       packageName:  pkgName.map(pkg => pkg.packageName), 
       packageQuantity: totPkg,
       packagePrice: totalPackageAmount,
-     
-      
-    }));//array of objects
+    }
     console.log("Total items quantity:", totItems);
     console.log("Total packages quantity:", totPkg);
     console.log("itmArr", itmArrNew);

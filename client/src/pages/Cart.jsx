@@ -63,7 +63,7 @@ const Cart = () => {
           );
 
           // Log the response data to inspect the structure
-          console.log("Response Data:", response.data);
+          //console.log("Response Data:", response.data);
 
           if (response.data && response.data.data && Array.isArray(response.data.data.data)) {
             const cartData = response.data.data.data; // Access the correct nested array
@@ -80,6 +80,10 @@ const Cart = () => {
       };
 
       fetchCart();
+      cartItems.forEach((item, index) => {
+        console.log(`Package ${index + 1}:`, item.package);
+      });
+      
     }
   }, [userId2]);
 
@@ -113,26 +117,45 @@ const Cart = () => {
               />
             </div>
             <div className="w-2/3 pl-6">
-              <p className="text-xl font-bold text-white">{item.name}</p>
+              <p className="text-xl font-bold text-blue-500">{item.name}</p>
               <p className="text-gray-400">Price: <span className="text-lg font-semibold text-mauve">${item.totalPrice}</span></p>
               <div className="text-gray-400 space-y-1">
                 {/* Handling items field if available */}
-                {item.items && Array.isArray(item.items) && item.items.length > 0 ? (
-                  item.items.map((subItem, idx) => (
-                    <p key={idx}>{subItem.itemName}: ${subItem.itemPrice}</p>
-                  ))
-                ) : (
-                  <p>No items in this section.</p>
+                {item.items ? (
+                  <div>
+                  <div>Item Quantity: {item.items.itemQuantity}</div>
+                  <div>Item Price: {item.items.itemPrice}</div>
+                  </div>
+                ):(
+                  <div>nothing to show</div>
                 )}
 
+
+                
                 {/* Handling package field if available */}
-                {item.package && Array.isArray(item.package) && item.package.length > 0 ? (
+               {/* {item.package && Array.isArray(item.package) && item.package.length > 0 ? (
                   item.package.map((pkg, idx) => (
                     <p key={idx}>{pkg.packageName}: ${pkg.packagePrice}</p>
                   ))
                 ) : (
                   <p>No package selected.</p>
-                )}
+                )}*/}
+               {item.package ? (
+  <div className='pt-3 space-y-2'>
+    <span>Package name:</span>
+    <div>
+    {item.package.packageName?.map((pkgName, index) => (
+      <div key={index} className=''>{pkgName}</div>
+    ))}</div>
+    <div>
+      <div>Package Price: {item.package.packagePrice}</div>
+      <div>Package Quantity:  {item.package.packageQuantity}</div>
+    </div>
+  </div>
+) : (
+  <div>No package available</div>
+)}
+
 
                 <p className="font-bold text-lg text-mauve">Total: ${item.totalPrice}</p>
               </div>
