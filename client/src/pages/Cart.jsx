@@ -1,38 +1,87 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import i1 from '../assets/images/download.jpeg';
+import { useDispatch, useSelector } from "react-redux";
+import { setUserDetails } from "../features/user/userSlice.js";
+import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [error, setError] = useState(null); // To handle error messages
-  
-  const userId = "67647da0c8609ca55b145402";
-  
+  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  const [userId2, setUserId2] = useState("");
+
   useEffect(() => {
-    const fetchCart = async () => {
+    const fetchUserDetails = async () => {
       try {
-        const response = await axios.post('http://localhost:8080/api/v1/cart/fetchCart', { userId });
-        
-        // Log the response data to inspect the structure
-        console.log('Response Data:', response.data);
-        
-        if (response.data && response.data.data && Array.isArray(response.data.data.data)) {
-          const cartData = response.data.data.data; // Access the correct nested array
-          setCartItems(cartData);
-          calculateTotalPrice(cartData);
-        } else {
-          setError("No cart items found or invalid data format.");
-        }
-      } catch (error) {
-        console.error("Error fetching cart items:", error);
-        setError("Error fetching cart items.");
+        const response = await axios.get(
+          "http://localhost:8080/api/v1/users/current-user",
+          { withCredentials: true }
+        );
+
+        const obj = response.data.data;
+        console.log(obj);
+        dispatch(
+          setUserDetails({
+            _id: obj._id,
+            email: obj.email,
+            firstName: obj.firstName,
+            lastName: obj.lastName,
+            userType: obj.userType,
+            contactNumber: obj.contactNumber,
+          })
+        );
+
+        // Set the userId2 state here
+        setUserId2(obj._id);
+      } catch (err) {
+        toast.error("Error fetching user details!", {
+          autoClose: 1500,
+          closeButton: false,
+        });
+      } finally {
+        setLoading(false);
       }
     };
-    
-    
-    fetchCart();
-  }, [userId]);
+
+    fetchUserDetails();
+  }, [dispatch]);
+
+  useEffect(() => {
+    // Only fetch the cart if userId2 is not empty
+    if (userId2) {
+      const fetchCart = async () => {
+        try {
+          console.log("userid", userId2);
+          const response = await axios.post(
+            "http://localhost:8080/api/v1/cart/fetchCart",
+            { userId: userId2 }
+          );
+
+          // Log the response data to inspect the structure
+          console.log("Response Data:", response.data);
+
+          if (response.data && response.data.data && Array.isArray(response.data.data.data)) {
+            const cartData = response.data.data.data; // Access the correct nested array
+            console.log(cartData);
+            setCartItems(cartData);
+            calculateTotalPrice(cartData);
+          } else {
+            setError("No cart items found or invalid data format.");
+          }
+        } catch (error) {
+          console.error("Error fetching cart items:", error);
+          setError("Error fetching cart items.");
+        }
+      };
+
+      fetchCart();
+    }
+  }, [userId2]);
 
   // Calculate the total price of all cart items
   const calculateTotalPrice = (items) => {
