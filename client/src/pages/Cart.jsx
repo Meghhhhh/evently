@@ -3,6 +3,7 @@ import axios from 'axios';
 import i1 from '../assets/images/download.jpeg';
 import { useDispatch, useSelector } from "react-redux";
 import { setUserDetails } from "../features/user/userSlice.js";
+import Payment from "../components/Payment.jsx"
 import { toast } from "react-toastify";
 
 const Cart = () => {
@@ -116,7 +117,7 @@ const Cart = () => {
               <p className="font-bold text-lg text-mauve">Total: ${item.totalPrice}</p>
               <button
                 onClick={() => handleDelete(item._id)}
-                className="mt-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
+                className="min-w-1/12 h-[50px] bg-red px-4 rounded-md text-white"
               >
                 Delete from cart
               </button>
@@ -127,6 +128,7 @@ const Cart = () => {
 
       <div className="mt-6 text-white font-bold">
         <p className="text-2xl">Total Price: ${totalPrice}</p>
+        <Payment />
       </div>
     </div>
   );
