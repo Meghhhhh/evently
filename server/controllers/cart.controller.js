@@ -79,24 +79,32 @@ exports.addToCart = async (req, res) => {
 
 exports.removeFromCart = async (req, res) => {
   try {
-    if (!req.body.id) {
-      throw new ApiError(400, "Cart ID is required");
+    const { id } = req.body;
+    if (!id) {
+      return res.status(400).json({ success: false, message: "Cart ID is required" });
     }
 
-    const cart = await Cart.findById(req.body.id);
+    const cart = await Cart.findById(id);
     if (!cart) {
-      throw new ApiError(404, "Cart element not found");
+      return res.status(404).json({ success: false, message: "Cart element not found" });
     }
 
-    await Cart.findByIdAndDelete(req.body.id);
+    await Cart.findByIdAndDelete(id);
 
-    return res
-      .status(200)
-      .json(new ApiResponse(200, { data: cart }, "Removed from cart successfully"));
+    return res.status(200).json({
+      success: true,
+      data: cart,
+      message: "Removed from cart successfully",
+    });
   } catch (error) {
-    throw new ApiError(500, "Something went wrong", error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+      error: error.message,
+    });
   }
 };
+
 
 exports.fetchCart = async (req, res) => {
   try {
