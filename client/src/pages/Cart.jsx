@@ -4,16 +4,15 @@ import i1 from '../assets/images/download.jpeg';
 import { useDispatch, useSelector } from "react-redux";
 import { setUserDetails } from "../features/user/userSlice.js";
 import { toast } from "react-toastify";
-import { ToastContainer } from "react-toastify";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [error, setError] = useState(null); // To handle error messages
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const [userId2, setUserId2] = useState("");
+  const [userId, setUserId] = useState("");
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -23,26 +22,12 @@ const Cart = () => {
           { withCredentials: true }
         );
 
-        const obj = response.data.data;
-        console.log(obj);
-        dispatch(
-          setUserDetails({
-            _id: obj._id,
-            email: obj.email,
-            firstName: obj.firstName,
-            lastName: obj.lastName,
-            userType: obj.userType,
-            contactNumber: obj.contactNumber,
-          })
-        );
-
-        // Set the userId2 state here
-        setUserId2(obj._id);
+        const user = response.data.data;
+        dispatch(setUserDetails(user));
+        setUserId(user._id);
       } catch (err) {
-        toast.error("Error fetching user details!", {
-          autoClose: 1500,
-          closeButton: false,
-        });
+        toast.error("Error fetching user details!");
+        setError("Failed to fetch user details.");
       } finally {
         setLoading(false);
       }
@@ -52,44 +37,48 @@ const Cart = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    // Only fetch the cart if userId2 is not empty
-    if (userId2) {
+    if (userId) {
       const fetchCart = async () => {
         try {
-          console.log("userid", userId2);
           const response = await axios.post(
             "http://localhost:8080/api/v1/cart/fetchCart",
-            { userId: userId2 }
+            { userId }
           );
 
-          // Log the response data to inspect the structure
-          console.log("Response Data:", response.data);
-
-          if (response.data && response.data.data && Array.isArray(response.data.data.data)) {
-            const cartData = response.data.data.data; // Access the correct nested array
-            console.log(cartData);
-            setCartItems(cartData);
-            calculateTotalPrice(cartData);
-          } else {
-            setError("No cart items found or invalid data format.");
-          }
+          const cartData = response.data.data.data || [];
+          setCartItems(cartData);
+          calculateTotalPrice(cartData);
         } catch (error) {
-          console.error("Error fetching cart items:", error);
           setError("Error fetching cart items.");
         }
       };
 
       fetchCart();
     }
-  }, [userId2]);
+  }, [userId]);
 
-  // Calculate the total price of all cart items
   const calculateTotalPrice = (items) => {
-    if (Array.isArray(items)) {
-      const total = items.reduce((sum, item) => sum + (item.totalPrice || 0), 0);
-      setTotalPrice(total);
-    } else {
-      setError("Invalid data format for cart items.");
+    const total = items.reduce((sum, item) => sum + (item.totalPrice || 0), 0);
+    setTotalPrice(total);
+  };
+
+  const handleDelete = async (itemId) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/api/v1/cart/removeFromCart",
+        { id: itemId }
+      );
+
+      if (response.data.success) {
+        toast.success("Item removed from cart!");
+        const updatedCart = cartItems.filter((item) => item._id !== itemId);
+        setCartItems(updatedCart);
+        calculateTotalPrice(updatedCart);
+      } else {
+        toast.error("Failed to remove item from cart.");
+      }
+    } catch (error) {
+      toast.error("Error removing item from cart.");
     }
   };
 
@@ -97,14 +86,14 @@ const Cart = () => {
     <div className="p-6 bg-gray-900 min-h-screen">
       <h1 className="text-3xl font-extrabold text-white mb-8 text-center">Your Cart</h1>
 
-      {/* Error handling */}
       {error && <p className="text-red-500 text-center">{error}</p>}
-
-      {cartItems.length === 0 ? (
+      {loading ? (
+        <p className="text-white text-center">Loading...</p>
+      ) : cartItems.length === 0 ? (
         <p className="text-white text-center">Your cart is empty.</p>
       ) : (
-        cartItems.map((item, index) => (
-          <div key={index} className="bg-gray-800 shadow-lg rounded-lg p-6 mt-6 flex hover:bg-gray-700 transition duration-300">
+        cartItems.map((item) => (
+          <div key={item._id} className="bg-gray-800 shadow-lg rounded-lg p-6 mt-6 flex hover:bg-gray-700 transition duration-300">
             <div className="w-1/3">
               <img
                 src={i1}
@@ -115,27 +104,22 @@ const Cart = () => {
             <div className="w-2/3 pl-6">
               <p className="text-xl font-bold text-white">{item.name}</p>
               <p className="text-gray-400">Price: <span className="text-lg font-semibold text-mauve">${item.totalPrice}</span></p>
-              <div className="text-gray-400 space-y-1">
-                {/* Handling items field if available */}
-                {item.items && Array.isArray(item.items) && item.items.length > 0 ? (
-                  item.items.map((subItem, idx) => (
-                    <p key={idx}>{subItem.itemName}: ${subItem.itemPrice}</p>
-                  ))
-                ) : (
-                  <p>No items in this section.</p>
-                )}
 
-                {/* Handling package field if available */}
-                {item.package && Array.isArray(item.package) && item.package.length > 0 ? (
-                  item.package.map((pkg, idx) => (
-                    <p key={idx}>{pkg.packageName}: ${pkg.packagePrice}</p>
-                  ))
-                ) : (
-                  <p>No package selected.</p>
-                )}
+              {item.items?.length > 0 && item.items.map((subItem, idx) => (
+                <p key={idx}>{subItem.itemName}: ${subItem.itemPrice}</p>
+              ))}
 
-                <p className="font-bold text-lg text-mauve">Total: ${item.totalPrice}</p>
-              </div>
+              {item.package?.length > 0 && item.package.map((pkg, idx) => (
+                <p key={idx}>{pkg.packageName}: ${pkg.packagePrice}</p>
+              ))}
+
+              <p className="font-bold text-lg text-mauve">Total: ${item.totalPrice}</p>
+              <button
+                onClick={() => handleDelete(item._id)}
+                className="mt-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
+              >
+                Delete from cart
+              </button>
             </div>
           </div>
         ))
