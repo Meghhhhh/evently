@@ -11,9 +11,7 @@ import dateReducer from "../features/date/dateSlice.js"
 export const store = configureStore({
   reducer: {
     user: userReducer,
-
     vendor: vendorReducer,
-
     venue: venueReducer,
     cart:cartReducer,
     city:cityReducer,

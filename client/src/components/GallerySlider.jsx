@@ -35,7 +35,7 @@ const GallerySlider = ({ slides = 3, height = 300, halls = [], btn = "Book Now",
         userId,
         isVenue: true,
         name: hall.subVenueName,
-        totalPrice: hall.subVenuePrice,
+        totalPrice: hall.subVenuePrice, 
         items: [{
         itemQuantity: 1,
         itemPrice: hall.subVenuePrice
