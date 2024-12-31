@@ -5,11 +5,11 @@ const cartSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
-        unique: true,
       },
     isVenue:{
         type:Boolean,
-        default:false
+        default:false,
+        required:false
     },
     name:{
         type:String,
@@ -19,18 +19,18 @@ const cartSchema = new mongoose.Schema({
     totalPrice:{
         type:Number,
     },
-    items:[{
+    items:{
         itemQuantity:{
             type:Number,
         },
         itemPrice:{
             type:Number,
         }
-    }],
+    },
     package:[{
-        packageName:{
+        packageName:[{
             type:String,
-        },
+        }],
         packageQuantity:{
             type:Number,
         },
