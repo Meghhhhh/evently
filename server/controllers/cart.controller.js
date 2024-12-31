@@ -60,9 +60,7 @@ exports.addToCart = async (req, res) => {
     ) {
       throw new ApiError(400, "All fields are required");
     }
-
-      // If no cart exists for the user, create a new one
-      let let cart = await Cart.create({
+ let cart = await Cart.create({
         userId,
         isVenue,
         name,
@@ -142,3 +140,4 @@ exports.fetchCartTotalPrice = async (req, res) => {
     throw new ApiError(500, "Something went wrong", error.message);
   }
 };
+ 

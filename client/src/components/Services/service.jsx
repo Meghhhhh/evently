@@ -101,7 +101,7 @@ fetchUserDetails();
     }
   };
   
-
+ 
   useEffect(() => {
  
     const totItems = quantities.reduce((acc, qty) => acc + qty, 0);

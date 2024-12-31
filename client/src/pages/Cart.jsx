@@ -7,9 +7,18 @@ const Cart = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [error, setError] = useState(null); // To handle error messages
   
-  const userId = "67647da0c8609ca55b145402";
+  const userId = "67738d3e4d3868b76448931a";
   
   useEffect(() => {
+    const handleDelete = async() => {
+      try {
+        
+      } catch (error) {
+        console.error("Error deleting cart items:", error);
+        setError("Error deleting cart items.");
+      }
+
+    }
     const fetchCart = async () => {
       try {
         const response = await axios.post('http://localhost:8080/api/v1/cart/fetchCart', { userId });
@@ -70,7 +79,7 @@ const Cart = () => {
                 {/* Handling items field if available */}
                 {item.items && Array.isArray(item.items) && item.items.length > 0 ? (
                   item.items.map((subItem, idx) => (
-                    <p key={idx}>{subItem.itemName}: ${subItem.itemPrice}</p>
+                    <p key={idx}>{subItem.itemQuantity}: ${subItem.itemPrice}</p>
                   ))
                 ) : (
                   <p>No items in this section.</p>
@@ -86,6 +95,7 @@ const Cart = () => {
                 )}
 
                 <p className="font-bold text-lg text-mauve">Total: ${item.totalPrice}</p>
+                <button onClick={handleDelete(item.id)}>Delete from cart</button>
               </div>
             </div>
           </div>
