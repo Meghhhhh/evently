@@ -14,6 +14,8 @@ import {
   Sidebar,
 } from "../components/index.js";
 import ReviewSlider from "../components/ReviewSlider.jsx";
+import { Link } from "react-router-dom";
+import { setUserDetails } from "../features/user/userSlice.js";
 
 // Define custom styles for headings
 const customStyles = `
@@ -41,6 +43,7 @@ const customStyles = `
 `;
 
 const Home = () => {
+  console.log("render");
   const dispatch = useDispatch();
 
   const { venues } = useSelector((state) => state.venue);
@@ -52,54 +55,144 @@ const Home = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [images, setImages] = useState([]);
   const containerRef = useRef(null);
-
+   const user = useSelector((state) => state.user);
   useEffect(() => {
-    const getCities = async () => {
-      const response = await axios.post(
-        "http://localhost:8080/api/v1/cities/getAllCitiesExceptSelected",
-        { excludedCity: selectedCity?.cityName ? selectedCity.cityName : "City1111" }
-      );
-      if (response.data.statusCode <= 200)
-        setCities(response?.data?.data?.data);
-    };
-
-    getCities();
-  }, [selectedCity]);
-
-  useEffect(() => {
-    const getReviews = async () => {
-      const response = await axios.post(
-        "http://localhost:8080/api/v1/reviews/getReviewsByType"
-      );
-      if (response?.data?.statusCode <= 200) {
-        setReviews(response.data.data?.data);
+    const fetchUserDetails = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/api/v1/users/current-user",
+          { withCredentials: true }
+        );
+        const obj = response.data.data;
+        dispatch(
+          setUserDetails({
+            _id: obj._id,
+            email: obj.email,
+            firstName: obj.firstName,
+            lastName: obj.lastName,
+            userType: obj.userType,
+            contactNumber: obj.contactNumber,
+          })
+        );
+        setFirstName(obj.firstName || "");
+        setLastName(obj.lastName || "");
+        setContactNumber(obj.contactNumber || "");
+      } catch (err) {
+        toast.error("error fetching user details!", {
+          autoClose: 1500,
+          closeButton: false,
+        });
+      } finally {
+        setLoading(false);
       }
     };
-    getReviews();
-  }, []);
+
+    fetchUserDetails();
+  }, [dispatch]);
+
+  // useEffect(() => {
+  //   const getCities = async () => {
+  //     const response = await axios.post(
+  //       "http://localhost:8080/api/v1/cities/getAllCitiesExceptSelected",
+  //       { excludedCity: selectedCity?.cityName ? selectedCity.cityName : "City1111" }
+  //     );
+  //     if (response.data.statusCode <= 200)
+  //       setCities(response?.data?.data?.data);
+  //   };
+
+  //   getCities();
+
+  //   const getReviews = async () => {
+  //     const response = await axios.post(
+  //       "http://localhost:8080/api/v1/reviews/getReviewsByType"
+  //     );
+  //     if (response?.data?.statusCode <= 200) {
+  //       setReviews(response.data.data?.data);
+  //     }
+  //   };
+
+  //   getReviews();
+
+  //   const getVenues = async () => {
+  //     const response = await axios.post(
+  //       "http://localhost:8080/api/v1/cities/getAllVenuesAtCity",
+  //       { cityName: selectedCity.cityName ? selectedCity.cityName : "City1111" }
+  //     );
+  //     if (response?.data?.statusCode <= 200) {
+  //       dispatch(setVenues(response.data.data.data))
+  //     }
+  //   };
+  //   getVenues();
+
+  //   const getImages = async() => {
+  //     const response = await axios.get("http://localhost:8080/api/v1/registration/recentEventImages");
+
+  //     if (response.data.statusCode <= 200)
+  //       setImages(response?.data?.data?.data);
+  //   }
+  //   getImages();
+  // }, [selectedCity]);
+
+  // useEffect(() => {
+  //   const getReviews = async () => {
+  //     const response = await axios.post(
+  //       "http://localhost:8080/api/v1/reviews/getReviewsByType"
+  //     );
+  //     if (response?.data?.statusCode <= 200) {
+  //       setReviews(response.data.data?.data);
+  //     }
+  //   };
+  //   getReviews();
+  // }, []);
+
+  // useEffect(() => {
+  //   const getVenues = async () => {
+  //     const response = await axios.post(
+  //       "http://localhost:8080/api/v1/cities/getAllVenuesAtCity",
+  //       { cityName: selectedCity.cityName ? selectedCity.cityName : "City1111" }
+  //     );
+  //     if (response?.data?.statusCode <= 200) {
+  //       dispatch(setVenues(response.data.data.data))
+  //     }
+  //   };
+  //   getVenues();
+  // }, [selectedCity]);
+
+  // useEffect(() => {
+  //   const getImages = async() => {
+  //     const response = await axios.get("http://localhost:8080/api/v1/registration/recentEventImages");
+
+  //     if (response.data.statusCode <= 200)
+  //       setImages(response?.data?.data?.data);
+  //   }
+  //   getImages();
+  // }, [])
 
   useEffect(() => {
-    const getVenues = async () => {
-      const response = await axios.post(
-        "http://localhost:8080/api/v1/cities/getAllVenuesAtCity",
-        { cityName: selectedCity.cityName ? selectedCity.cityName : "City1111" }
-      );
-      if (response?.data?.statusCode <= 200) {
-        dispatch(setVenues(response.data.data.data))
-      }
+    const fetchData = async () => {
+      const [citiesResponse, reviewsResponse, venuesResponse, imageResponse] =
+        await Promise.all([
+          axios.post(
+            "http://localhost:8080/api/v1/cities/getAllCitiesExceptSelected",
+            {
+              excludedCity: selectedCity?.cityName || "City1111",
+            }
+          ),
+          axios.post("http://localhost:8080/api/v1/reviews/getReviewsByType"),
+          axios.post("http://localhost:8080/api/v1/cities/getAllVenuesAtCity", {
+            cityName: selectedCity.cityName || "City1111",
+          }),
+          axios.get("http://localhost:8080/api/v1/registration/recentEventImages")
+        ]);
+
+      setCities(citiesResponse.data.data?.data || []);
+      setReviews(reviewsResponse.data.data?.data || []);
+      setImages(imageResponse?.data?.data?.data || []);
+      dispatch(setVenues(venuesResponse.data.data?.data || []));
     };
-    getVenues();
-  }, [selectedCity]);
 
-  useEffect(() => {
-    const getImages = async() => {
-      const response = await axios.get("http://localhost:8080/api/v1/registration/recentEventImages");
-
-      if (response.data.statusCode <= 200)
-        setImages(response?.data?.data?.data);
-    }
-    getImages();
-  }, [])
+    fetchData();
+  }, [selectedCity, dispatch]);
 
   const openModal = (modalId) => {
     setOpenModals({ ...openModals, [modalId]: true });
@@ -123,14 +216,12 @@ const Home = () => {
   const handleExploreClick = (city) => {
     dispatch(setSelectedCity(city));
   };
- 
+
   return (
     <div className="min-h-screen">
       <style>{customStyles}</style> {/* Inline styles for headings */}
-
       <Navbar onSidebarToggle={toggleSidebar} />
       <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
-
       {/* Modals for diff cities */}
       <div className="flex items-center justify-center py-6 pt-20 relative">
         <button
@@ -185,7 +276,6 @@ const Home = () => {
           </Modal>
         ))}
       </div>
-
       {/* images carousal */}
       <div className="py-8">
         <h2 className="text-3xl font-bold mb-6 text-center heading-container ml-3 uppercase">
@@ -193,7 +283,7 @@ const Home = () => {
         </h2>
         <Carousal images={images} />
       </div>
-
+      <Link to="/cart">cart</Link>
       {/* exploring locations */}
       <div className="py-8 px-4">
         <h2 className="text-3xl font-bold mb-6 text-center heading-container uppercase">
@@ -220,24 +310,22 @@ const Home = () => {
           )}
         </div>
       </div>
-
       {/* reviews */}
       <div className="pt-5 px-4 bg-gray-900">
         <h2 className="text-3xl font-bold mb-6 text-center heading-container uppercase">
           Latest Reviews
         </h2>
-          {reviews.length !== 0 ? (
-            <ReviewSlider reviews={reviews} /> 
-          ) : (
-            <div className="flex flex-col items-center p-6 w-screen ">
+        {reviews.length !== 0 ? (
+          <ReviewSlider reviews={reviews} />
+        ) : (
+          <div className="flex flex-col items-center p-6 w-screen ">
             <FaCommentDots className="text-6xl text-gray-400 mb-4" />
             <h1 className="text-2xl font-semibold uppercase text-white">
               No reviews to display
             </h1>
           </div>
-          )}
+        )}
       </div>
-
       {/* footer */}
       <Footer />
     </div>
