@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
-import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { FaCity, FaMapMarkerAlt, FaCommentDots } from "react-icons/fa";
-import { setVenues, setSelectedVenue } from "../features/venue/venueSlice.js";
-import { setSelectedCity } from "../features/city/citySlice.js";
+import React, { useState, useRef, useEffect } from 'react';
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { FaCity, FaMapMarkerAlt, FaCommentDots } from 'react-icons/fa';
+import { setVenues, setSelectedVenue } from '../features/venue/venueSlice.js';
+import { setSelectedCity } from '../features/city/citySlice.js';
 import {
   Navbar,
   Modal,
@@ -12,10 +12,10 @@ import {
   Footer,
   Carousal,
   Sidebar,
-} from "../components/index.js";
-import ReviewSlider from "../components/ReviewSlider.jsx";
-import { Link } from "react-router-dom";
-import { setUserDetails } from "../features/user/userSlice.js";
+} from '../components/index.js';
+import ReviewSlider from '../components/ReviewSlider.jsx';
+import { Link } from 'react-router-dom';
+import { setUserDetails } from '../features/user/userSlice.js';
 
 // Define custom styles for headings
 const customStyles = `
@@ -43,11 +43,11 @@ const customStyles = `
 `;
 
 const Home = () => {
-  console.log("render");
+  // console.log("hi",import.meta.env.VITE_BACKEND_URL);
   const dispatch = useDispatch();
 
-  const { venues } = useSelector((state) => state.venue);
-  const { selectedCity } = useSelector((state) => state.city);
+  const { venues } = useSelector(state => state.venue);
+  const { selectedCity } = useSelector(state => state.city);
 
   const [cities, setCities] = useState([]);
   const [reviews, setReviews] = useState([]);
@@ -55,13 +55,13 @@ const Home = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [images, setImages] = useState([]);
   const containerRef = useRef(null);
-   const user = useSelector((state) => state.user);
+  const user = useSelector(state => state.user);
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/v1/users/current-user",
-          { withCredentials: true }
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/current-user`,
+          { withCredentials: true },
         );
         const obj = response.data.data;
         dispatch(
@@ -72,13 +72,13 @@ const Home = () => {
             lastName: obj.lastName,
             userType: obj.userType,
             contactNumber: obj.contactNumber,
-          })
+          }),
         );
-        setFirstName(obj.firstName || "");
-        setLastName(obj.lastName || "");
-        setContactNumber(obj.contactNumber || "");
+        setFirstName(obj.firstName || '');
+        setLastName(obj.lastName || '');
+        setContactNumber(obj.contactNumber || '');
       } catch (err) {
-        toast.error("error fetching user details!", {
+        toast.error('error fetching user details!', {
           autoClose: 1500,
           closeButton: false,
         });
@@ -93,7 +93,7 @@ const Home = () => {
   // useEffect(() => {
   //   const getCities = async () => {
   //     const response = await axios.post(
-  //       "http://localhost:8080/api/v1/cities/getAllCitiesExceptSelected",
+  //       "${import.meta.env.VITE_BACKEND_URL}/api/v1/cities/getAllCitiesExceptSelected",
   //       { excludedCity: selectedCity?.cityName ? selectedCity.cityName : "City1111" }
   //     );
   //     if (response.data.statusCode <= 200)
@@ -104,7 +104,7 @@ const Home = () => {
 
   //   const getReviews = async () => {
   //     const response = await axios.post(
-  //       "http://localhost:8080/api/v1/reviews/getReviewsByType"
+  //       "${import.meta.env.VITE_BACKEND_URL}/api/v1/reviews/getReviewsByType"
   //     );
   //     if (response?.data?.statusCode <= 200) {
   //       setReviews(response.data.data?.data);
@@ -115,7 +115,7 @@ const Home = () => {
 
   //   const getVenues = async () => {
   //     const response = await axios.post(
-  //       "http://localhost:8080/api/v1/cities/getAllVenuesAtCity",
+  //       "${import.meta.env.VITE_BACKEND_URL}/api/v1/cities/getAllVenuesAtCity",
   //       { cityName: selectedCity.cityName ? selectedCity.cityName : "City1111" }
   //     );
   //     if (response?.data?.statusCode <= 200) {
@@ -125,7 +125,7 @@ const Home = () => {
   //   getVenues();
 
   //   const getImages = async() => {
-  //     const response = await axios.get("http://localhost:8080/api/v1/registration/recentEventImages");
+  //     const response = await axios.get("${import.meta.env.VITE_BACKEND_URL}/api/v1/registration/recentEventImages");
 
   //     if (response.data.statusCode <= 200)
   //       setImages(response?.data?.data?.data);
@@ -136,7 +136,7 @@ const Home = () => {
   // useEffect(() => {
   //   const getReviews = async () => {
   //     const response = await axios.post(
-  //       "http://localhost:8080/api/v1/reviews/getReviewsByType"
+  //       "${import.meta.env.VITE_BACKEND_URL}/api/v1/reviews/getReviewsByType"
   //     );
   //     if (response?.data?.statusCode <= 200) {
   //       setReviews(response.data.data?.data);
@@ -148,7 +148,7 @@ const Home = () => {
   // useEffect(() => {
   //   const getVenues = async () => {
   //     const response = await axios.post(
-  //       "http://localhost:8080/api/v1/cities/getAllVenuesAtCity",
+  //       "${import.meta.env.VITE_BACKEND_URL}/api/v1/cities/getAllVenuesAtCity",
   //       { cityName: selectedCity.cityName ? selectedCity.cityName : "City1111" }
   //     );
   //     if (response?.data?.statusCode <= 200) {
@@ -160,7 +160,7 @@ const Home = () => {
 
   // useEffect(() => {
   //   const getImages = async() => {
-  //     const response = await axios.get("http://localhost:8080/api/v1/registration/recentEventImages");
+  //     const response = await axios.get("${import.meta.env.VITE_BACKEND_URL}/api/v1/registration/recentEventImages");
 
   //     if (response.data.statusCode <= 200)
   //       setImages(response?.data?.data?.data);
@@ -173,16 +173,31 @@ const Home = () => {
       const [citiesResponse, reviewsResponse, venuesResponse, imageResponse] =
         await Promise.all([
           axios.post(
-            "http://localhost:8080/api/v1/cities/getAllCitiesExceptSelected",
+            `${
+              import.meta.env.VITE_BACKEND_URL
+            }/api/v1/cities/getAllCitiesExceptSelected`,
             {
-              excludedCity: selectedCity?.cityName || "City1111",
-            }
+              excludedCity: selectedCity?.cityName || 'City1111',
+            },
           ),
-          axios.post("http://localhost:8080/api/v1/reviews/getReviewsByType"),
-          axios.post("http://localhost:8080/api/v1/cities/getAllVenuesAtCity", {
-            cityName: selectedCity.cityName || "City1111",
-          }),
-          axios.get("http://localhost:8080/api/v1/registration/recentEventImages")
+          axios.post(
+            `${
+              import.meta.env.VITE_BACKEND_URL
+            }/api/v1/reviews/getReviewsByType`,
+          ),
+          axios.post(
+            `${
+              import.meta.env.VITE_BACKEND_URL
+            }/api/v1/cities/getAllVenuesAtCity`,
+            {
+              cityName: selectedCity.cityName || 'City1111',
+            },
+          ),
+          axios.get(
+            `${
+              import.meta.env.VITE_BACKEND_URL
+            }/api/v1/registration/recentEventImages`,
+          ),
         ]);
 
       setCities(citiesResponse.data.data?.data || []);
@@ -194,18 +209,18 @@ const Home = () => {
     fetchData();
   }, [selectedCity, dispatch]);
 
-  const openModal = (modalId) => {
+  const openModal = modalId => {
     setOpenModals({ ...openModals, [modalId]: true });
   };
 
-  const closeModal = (modalId) => {
+  const closeModal = modalId => {
     setOpenModals({ ...openModals, [modalId]: false });
   };
 
-  const scroll = (direction) => {
+  const scroll = direction => {
     if (containerRef.current) {
-      const scrollAmount = direction === "left" ? -200 : 200;
-      containerRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      const scrollAmount = direction === 'left' ? -200 : 200;
+      containerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
 
@@ -213,19 +228,18 @@ const Home = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const handleExploreClick = (city) => {
+  const handleExploreClick = city => {
     dispatch(setSelectedCity(city));
   };
 
   return (
     <div className="min-h-screen">
       <style>{customStyles}</style> {/* Inline styles for headings */}
-      <Navbar onSidebarToggle={toggleSidebar} />
       <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
       {/* Modals for diff cities */}
       <div className="flex items-center justify-center py-6 pt-20 relative">
         <button
-          onClick={() => scroll("left")}
+          onClick={() => scroll('left')}
           className="absolute left-4 z-10 bg-gray-600 text-white p-2 rounded-full text-2xl font-bold hover:bg-gray-500 transition-colors"
         >
           &lt;
@@ -233,10 +247,10 @@ const Home = () => {
         <div
           ref={containerRef}
           className="flex gap-4 p-4 overflow-x-auto hide-scrollbar"
-          style={{ maxHeight: "200px", whiteSpace: "nowrap" }}
+          style={{ maxHeight: '200px', whiteSpace: 'nowrap' }}
         >
           {cities.length !== 0 ? (
-            cities.map((city) => (
+            cities.map(city => (
               <ModalButton
                 key={city._id}
                 modal={city}
@@ -253,13 +267,13 @@ const Home = () => {
           )}
         </div>
         <button
-          onClick={() => scroll("right")}
+          onClick={() => scroll('right')}
           className="absolute right-4 bg-gray-600 text-white p-2 rounded-full text-2xl font-bold hover:bg-gray-500 transition-colors"
         >
           &gt;
         </button>
 
-        {cities.map((city) => (
+        {cities.map(city => (
           <Modal
             key={city._id}
             isOpen={openModals[city._id]}
@@ -283,7 +297,6 @@ const Home = () => {
         </h2>
         <Carousal images={images} />
       </div>
-      <Link to="/cart">cart</Link>
       {/* exploring locations */}
       <div className="py-8 px-4">
         <h2 className="text-3xl font-bold mb-6 text-center heading-container uppercase">
@@ -291,12 +304,12 @@ const Home = () => {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {venues.length !== 0 ? (
-            venues.map((venue) => (
+            venues.map(venue => (
               <LocationCard
                 key={venue._id}
                 modal={venue}
-                message={"See Location"}
-                navigateTo={"/dateSelector"}
+                message={'See Location'}
+                navigateTo={'/dateSelector'}
                 dispatchAction={setSelectedVenue}
               />
             ))

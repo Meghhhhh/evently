@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import i1 from "../assets/images/download.jpeg";
-import { useSelector } from "react-redux";
-import Payment from "../components/Payment.jsx";
-import { toast } from "react-toastify";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import i1 from '../assets/images/download.jpeg';
+import { useSelector } from 'react-redux';
+import Payment from '../components/Payment.jsx';
+import { toast } from 'react-toastify';
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const userId = useSelector((state) => state.user._id);
+  const userId = useSelector(state => state.user._id);
   console.log(userId);
 
   // useEffect(() => {
   //   const fetchUserDetails = async () => {
   //     try {
   //       const response = await axios.get(
-  //         "http://localhost:8080/api/v1/users/current-user",
+  //         "${import.meta.env.VITE_BACKEND_URL}/api/v1/users/current-user",
   //         { withCredentials: true }
   //       );
 
@@ -40,8 +40,8 @@ const Cart = () => {
       const fetchCart = async () => {
         try {
           const response = await axios.post(
-            "http://localhost:8080/api/v1/cart/fetchCart",
-            { userId }
+            `${import.meta.env.VITE_BACKEND_URL}/api/v1/cart/fetchCart`,
+            { userId },
           );
 
           if (
@@ -54,10 +54,10 @@ const Cart = () => {
             setCartItems(cartData);
             calculateTotalPrice(cartData);
           } else {
-            setError("No cart items found or invalid data format.");
+            setError('No cart items found or invalid data format.');
           }
         } catch (error) {
-          setError("Error fetching cart items.");
+          setError('Error fetching cart items.');
         }
       };
 
@@ -68,28 +68,28 @@ const Cart = () => {
     }
   }, [userId]);
 
-  const calculateTotalPrice = (items) => {
+  const calculateTotalPrice = items => {
     const total = items.reduce((sum, item) => sum + (item.totalPrice || 0), 0);
     setTotalPrice(total);
   };
 
-  const handleDelete = async (itemId) => {
+  const handleDelete = async itemId => {
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/cart/removeFromCart",
-        { id: itemId }
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/cart/removeFromCart`,
+        { id: itemId },
       );
 
       if (response.data.success) {
-        toast.success("Item removed from cart!");
-        const updatedCart = cartItems.filter((item) => item._id !== itemId);
+        toast.success('Item removed from cart!');
+        const updatedCart = cartItems.filter(item => item._id !== itemId);
         setCartItems(updatedCart);
         calculateTotalPrice(updatedCart);
       } else {
-        toast.error("Failed to remove item from cart.");
+        toast.error('Failed to remove item from cart.');
       }
     } catch (error) {
-      toast.error("Error removing item from cart.");
+      toast.error('Error removing item from cart.');
     }
   };
 
@@ -105,7 +105,7 @@ const Cart = () => {
       ) : cartItems.length === 0 ? (
         <p className="text-white text-center">Your cart is empty.</p>
       ) : (
-        cartItems.map((item) => (
+        cartItems.map(item => (
           <div
             key={item._id}
             className="bg-gray-800 shadow-lg rounded-lg p-6 mt-6 flex hover:bg-gray-700 transition duration-300"
@@ -120,7 +120,7 @@ const Cart = () => {
             <div className="w-2/3 pl-6">
               <p className="text-xl font-bold text-blue-500">{item.name}</p>
               <p className="text-gray-400">
-                Price:{" "}
+                Price:{' '}
                 <span className="text-lg font-semibold text-mauve">
                   ${item.totalPrice}
                 </span>
