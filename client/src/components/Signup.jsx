@@ -147,6 +147,12 @@ const Signup = () => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSubmit(e);
+    }
+  };
+
   return (
     <div className="w-full flex flex-row max-[990px]:flex-col min-h-screen items-center justify-center p-5">
       <div className="w-2/3 text-center font-bold text-lg p-6 max-[990px]:w-full">
@@ -173,7 +179,7 @@ const Signup = () => {
         </div>
       </div>
       <div className="w-1/3 text-center p-6 max-[990px]:w-full">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
           <fieldset className="border-2 border-gray-300 rounded-lg mb-4">
             <legend className="text-left px-1">First Name</legend>
 
