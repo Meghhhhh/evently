@@ -59,8 +59,17 @@ const Signin = () => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSubmit(e);
+    }
+  };
+
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div
+      className="flex justify-center items-center h-screen"
+      onKeyDown={handleKeyDown}
+    >
       <div className="w-full max-w-md p-8 shadow-lg rounded-lg">
         <fieldset className="border-2 border-gray-300 p-4 rounded-lg">
           <legend className="text-lg font-semibold px-1">Sign In</legend>
