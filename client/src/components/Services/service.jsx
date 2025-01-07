@@ -237,15 +237,15 @@ fetchUserDetails();
       {/* header section */}
       <div className="sm:flex-row flex flex-col gap-10">
         <div className="flex flex-col gap-10 sm:w-[60%]">
-          <div className="bg-lightGray/10 rounded-md p-10 flex justify-between items-center">
+          <div className=" rounded-md p-10 flex justify-between items-center">
             <div className="flex flex-col gap-3">
-              <h2 className="font-bold text-3xl text-primaryPeach">{serviceName}</h2>
+              <h2 className="font-bold text-3xl ">{serviceName}</h2>
               <p>{location}</p>
             </div>
           </div>
           {/* about section */}
           <div className="bg-lightGray/10 rounded-md p-10 flex flex-col gap-3">
-            <h2 className="font-bold text-3xl text-primaryPeach">About {serviceName}</h2>
+            <h2 className="font-bold text-3xl ">About {serviceName}</h2>
             <div>{about}</div>
           </div>
         </div>
@@ -255,8 +255,8 @@ fetchUserDetails();
       </div>
 
       {/* single items */}
-      <div className="bg-lightGray/10 rounded-md p-10 flex flex-col gap-6">
-        <h2 className="font-bold text-3xl text-primaryPeach">Items We Provide</h2>
+      <div className=" rounded-md p-10 flex flex-col gap-6">
+        <h2 className="font-bold text-3xl ">Items We Provide</h2>
         <div className="bg-lightGray w-[100%] h-[100%] rounded-lg">
           <div className="p-2 flex justify-between items-center text-black">
             <div><b>Item Name</b> (you can buy in sets of 50 min. 50 provided)</div>
@@ -274,7 +274,7 @@ fetchUserDetails();
                 <div className="flex gap-10">
                   <div>{item.itemQuantity}</div>
                   <div>{item.itemPrice}</div>
-                  <div className="flex gap-4 bg-primaryPeach p-2 rounded-lg text-lightGray">
+                  <div className="flex gap-4 bg-primaryPeach p-2 rounded-lg ">
                     <span onClick={() => handleRemoveSingleItem(item,index)}>-</span>
                     <span>{quantities[index] || 0}</span>
                     <span onClick={() => handleAddSingleItem(item, index)}>+</span>
