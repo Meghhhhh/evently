@@ -78,13 +78,10 @@ const Home = () => {
         setLastName(obj.lastName || '');
         setContactNumber(obj.contactNumber || '');
       } catch (err) {
-        toast.error('error fetching user details!', {
+        console.error('error fetching user details!', {
           autoClose: 1500,
           closeButton: false,
-        });
-      } finally {
-        setLoading(false);
-      }
+        });}
     };
 
     fetchUserDetails();
