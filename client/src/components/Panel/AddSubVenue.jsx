@@ -1,10 +1,10 @@
-import axios from "axios";
-import React, { useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { ToastContainer } from "react-toastify";
-import { hourglass } from "ldrs";
+import axios from 'axios';
+import React, { useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import { hourglass } from 'ldrs';
 
 hourglass.register();
 
@@ -14,47 +14,47 @@ const AddSubVenue = () => {
   const subVenueDescriptionRef = useRef(null);
   const imageRef = useRef(null);
   const navigate = useNavigate();
-  const [imageName, setImageName] = useState("");
+  const [imageName, setImageName] = useState('');
   const [loader, setLoader] = useState(false);
-  const { selectedVenue } = useSelector((state) => state.venue);
+  const { selectedVenue } = useSelector(state => state.venue);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setLoader(true);
 
     const formData = new FormData();
-    formData.append("subVenueName", subVenueNameRef.current.value || "");
-    formData.append("subVenuePrice", subVenuePriceRef.current.value || "");
-    formData.append("venueId", selectedVenue._id || "");
+    formData.append('subVenueName', subVenueNameRef.current.value || '');
+    formData.append('subVenuePrice', subVenuePriceRef.current.value || '');
+    formData.append('venueId', selectedVenue._id || '');
     formData.append(
-      "subVenueDescription",
-      subVenueDescriptionRef.current.value || ""
+      'subVenueDescription',
+      subVenueDescriptionRef.current.value || '',
     );
-    formData.append("image", imageRef.current.files[0] || "");
+    formData.append('image', imageRef.current.files[0] || '');
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/venues/postSubVenueAtVenue",
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/venues/postSubVenueAtVenue`,
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            'Content-Type': 'multipart/form-data',
           },
-        }
+        },
       );
 
       if (response.data.statusCode === 200) {
-        toast.success("Sub Venue added successfully!");
+        toast.success('Sub Venue added successfully!');
         setTimeout(() => {
-          navigate("/panel/venues");
+          navigate('/panel/venues');
         }, 2000);
       }
     } catch (error) {
       if (error.response && error.response.data) {
         const { message } = error.response.data;
-        toast.error(message || "Failed to add sub venue.");
+        toast.error(message || 'Failed to add sub venue.');
       } else {
-        toast.error("An unexpected error occurred.");
+        toast.error('An unexpected error occurred.');
       }
     } finally {
       setLoader(false);
@@ -159,7 +159,7 @@ const AddSubVenue = () => {
                 color="black"
               ></l-hourglass>
             ) : (
-              "Add Sub Venue"
+              'Add Sub Venue'
             )}
           </button>
         </form>

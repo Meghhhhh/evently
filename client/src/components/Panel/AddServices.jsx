@@ -39,7 +39,7 @@ const userId = user._id
   useEffect(()=>{
     const getCities = async()=>{
       try {
-       const citiesArray = await axios.get("http://localhost:8080/api/v1/cities/getAllCities");
+       const citiesArray = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/cities/getAllCities`);
        console.log("arrayy",citiesArray);
        setCities(citiesArray.data.data.data);
        console.log("arrayy",cities);
@@ -56,7 +56,7 @@ const userId = user._id
       if (!cityName) return; // Avoid unnecessary fetches
       try {
         const venuesArray = await axios.post(
-          "http://localhost:8080/api/v1/cities/getAllVenuesAtCity",{cityName}
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/cities/getAllVenuesAtCity`,{cityName}
         );
         console.log(venuesArray.data.data.data)
         setVenueArr(venuesArray.data.data.data || []); // Update venues state
@@ -74,7 +74,7 @@ const userId = user._id
     e.preventDefault();
     try {
       console.log("in the frontend code",serviceName,location,about,vendorType,booking,cancellation,terms,venue,singleItems,user._id)
-      const addedDetails = await axios.post("http://localhost:8080/api/v1/vendor/addServiceDetails",{
+      const addedDetails = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/vendor/addServiceDetails`,{
         serviceName,location,about,vendorType,booking,cancellation,terms,venue,singleItems,userId
       });
       console.log(addedDetails.data)
@@ -132,7 +132,7 @@ const userId = user._id
     e.preventDefault();
     try {
       console.log(serviceName, location, about, vendorType, booking, cancellation, terms, _id,venue,singleItems)
-      const updatedDetails = await axios.put("http://localhost:8080/api/v1/vendor/updateServiceDetails", {
+      const updatedDetails = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/v1/vendor/updateServiceDetails`, {
         serviceName, location, about, vendorType, booking, cancellation, terms,vendorId: _id,venue,singleItems
       });
       console.log(updatedDetails);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaSearch, FaBars } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
+import { IoCartOutline } from "react-icons/io5";
 import { BiLogIn } from "react-icons/bi";
 import ThemeConverter from "./ThemeConvertor";
 import Cookies from "js-cookie";
@@ -11,6 +12,7 @@ const Navbar = ({ onSidebarToggle }) => {
 
   useEffect(() => {
     const userToken = Cookies.get("accessToken");
+
     setIsLoggedIn(!!userToken);
   }, []);
 
@@ -19,7 +21,7 @@ const Navbar = ({ onSidebarToggle }) => {
       <div className="text-xl font-bold">logo</div>
 
       <div className="hidden sm:flex lg:space-x-12">
-        <a
+        {/* <a
           href="#home"
           className="hover:bg-lightgreyplusplus hover:text-white font-bold px-3 py-1 rounded-md transition-all duration-300"
         >
@@ -42,15 +44,7 @@ const Navbar = ({ onSidebarToggle }) => {
           className="hover:bg-lightgreyplusplus hover:text-white font-bold px-3 py-1 rounded-md transition-all duration-300"
         >
           Contact
-        </a>
-        {isLoggedIn && (
-          <a
-            href="cart"
-            className="hover:bg-lightgreyplusplus hover:text-white font-bold px-3 py-1 rounded-md transition-all duration-300"
-          >
-            Cart
-          </a>
-        )}
+        </a> */}
       </div>
 
 
@@ -66,9 +60,18 @@ const Navbar = ({ onSidebarToggle }) => {
           />
         </div>
 
-        <div className="hidden sm:flex sm:items-center sm:justify-center sm:h-full sm:p-2 cursor-pointer">
+        <div className="hidden sm:flex sm:items-center sm:justify-center sm:h-full sm:p-2 cursor-pointer hover:bg-lightgreyplusplus rounded-[50%] mx-2">
           <ThemeConverter />
         </div>
+
+        {isLoggedIn && (
+          <Link
+            to="/cart"
+            className="hover:bg-lightgreyplusplus hover:text-white font-bold px-2 py-2 rounded-[50%] transition-all duration-300 mr-2"
+          >
+            <IoCartOutline size={24} />
+          </Link>
+        )}
 
         <div className="hidden sm:flex sm:items-center sm:justify-center sm:h-full sm:p-2">
           {isLoggedIn ? (
@@ -81,6 +84,7 @@ const Navbar = ({ onSidebarToggle }) => {
             </Link>
           )}
         </div>
+
       </div>
 
       <button className="sm:hidden text-2xl" onClick={onSidebarToggle}>

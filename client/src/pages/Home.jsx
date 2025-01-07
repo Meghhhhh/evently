@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
-import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { FaCity, FaMapMarkerAlt, FaCommentDots } from "react-icons/fa";
-import { setVenues, setSelectedVenue } from "../features/venue/venueSlice.js";
-import { setSelectedCity } from "../features/city/citySlice.js";
+import React, { useState, useRef, useEffect } from 'react';
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { FaCity, FaMapMarkerAlt, FaCommentDots } from 'react-icons/fa';
+import { setVenues, setSelectedVenue } from '../features/venue/venueSlice.js';
+import { setSelectedCity } from '../features/city/citySlice.js';
 import {
   Navbar,
   Modal,
@@ -12,8 +12,10 @@ import {
   Footer,
   Carousal,
   Sidebar,
-} from "../components/index.js";
-import ReviewSlider from "../components/ReviewSlider.jsx";
+} from '../components/index.js';
+import ReviewSlider from '../components/ReviewSlider.jsx';
+import { Link } from 'react-router-dom';
+import { setUserDetails } from '../features/user/userSlice.js';
 
 // Define custom styles for headings
 const customStyles = `
@@ -41,10 +43,11 @@ const customStyles = `
 `;
 
 const Home = () => {
+  // console.log("hi",import.meta.env.VITE_BACKEND_URL);
   const dispatch = useDispatch();
 
-  const { venues } = useSelector((state) => state.venue);
-  const { selectedCity } = useSelector((state) => state.city);
+  const { venues } = useSelector(state => state.venue);
+  const { selectedCity } = useSelector(state => state.city);
 
   const [cities, setCities] = useState([]);
   const [reviews, setReviews] = useState([]);
@@ -52,67 +55,172 @@ const Home = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [images, setImages] = useState([]);
   const containerRef = useRef(null);
-
+  const user = useSelector(state => state.user);
   useEffect(() => {
-    const getCities = async () => {
-      const response = await axios.post(
-        "http://localhost:8080/api/v1/cities/getAllCitiesExceptSelected",
-        { excludedCity: selectedCity?.cityName ? selectedCity.cityName : "City1111" }
-      );
-      if (response.data.statusCode <= 200)
-        setCities(response?.data?.data?.data);
-    };
-
-    getCities();
-  }, [selectedCity]);
-
-  useEffect(() => {
-    const getReviews = async () => {
-      const response = await axios.post(
-        "http://localhost:8080/api/v1/reviews/getReviewsByType"
-      );
-      if (response?.data?.statusCode <= 200) {
-        setReviews(response.data.data?.data);
+    const fetchUserDetails = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/current-user`,
+          { withCredentials: true },
+        );
+        const obj = response.data.data;
+        dispatch(
+          setUserDetails({
+            _id: obj._id,
+            email: obj.email,
+            firstName: obj.firstName,
+            lastName: obj.lastName,
+            userType: obj.userType,
+            contactNumber: obj.contactNumber,
+          }),
+        );
+        setFirstName(obj.firstName || '');
+        setLastName(obj.lastName || '');
+        setContactNumber(obj.contactNumber || '');
+      } catch (err) {
+        toast.error('error fetching user details!', {
+          autoClose: 1500,
+          closeButton: false,
+        });
+      } finally {
+        setLoading(false);
       }
     };
-    getReviews();
-  }, []);
+
+    fetchUserDetails();
+  }, [dispatch]);
+
+  // useEffect(() => {
+  //   const getCities = async () => {
+  //     const response = await axios.post(
+  //       "${import.meta.env.VITE_BACKEND_URL}/api/v1/cities/getAllCitiesExceptSelected",
+  //       { excludedCity: selectedCity?.cityName ? selectedCity.cityName : "City1111" }
+  //     );
+  //     if (response.data.statusCode <= 200)
+  //       setCities(response?.data?.data?.data);
+  //   };
+
+  //   getCities();
+
+  //   const getReviews = async () => {
+  //     const response = await axios.post(
+  //       "${import.meta.env.VITE_BACKEND_URL}/api/v1/reviews/getReviewsByType"
+  //     );
+  //     if (response?.data?.statusCode <= 200) {
+  //       setReviews(response.data.data?.data);
+  //     }
+  //   };
+
+  //   getReviews();
+
+  //   const getVenues = async () => {
+  //     const response = await axios.post(
+  //       "${import.meta.env.VITE_BACKEND_URL}/api/v1/cities/getAllVenuesAtCity",
+  //       { cityName: selectedCity.cityName ? selectedCity.cityName : "City1111" }
+  //     );
+  //     if (response?.data?.statusCode <= 200) {
+  //       dispatch(setVenues(response.data.data.data))
+  //     }
+  //   };
+  //   getVenues();
+
+  //   const getImages = async() => {
+  //     const response = await axios.get("${import.meta.env.VITE_BACKEND_URL}/api/v1/registration/recentEventImages");
+
+  //     if (response.data.statusCode <= 200)
+  //       setImages(response?.data?.data?.data);
+  //   }
+  //   getImages();
+  // }, [selectedCity]);
+
+  // useEffect(() => {
+  //   const getReviews = async () => {
+  //     const response = await axios.post(
+  //       "${import.meta.env.VITE_BACKEND_URL}/api/v1/reviews/getReviewsByType"
+  //     );
+  //     if (response?.data?.statusCode <= 200) {
+  //       setReviews(response.data.data?.data);
+  //     }
+  //   };
+  //   getReviews();
+  // }, []);
+
+  // useEffect(() => {
+  //   const getVenues = async () => {
+  //     const response = await axios.post(
+  //       "${import.meta.env.VITE_BACKEND_URL}/api/v1/cities/getAllVenuesAtCity",
+  //       { cityName: selectedCity.cityName ? selectedCity.cityName : "City1111" }
+  //     );
+  //     if (response?.data?.statusCode <= 200) {
+  //       dispatch(setVenues(response.data.data.data))
+  //     }
+  //   };
+  //   getVenues();
+  // }, [selectedCity]);
+
+  // useEffect(() => {
+  //   const getImages = async() => {
+  //     const response = await axios.get("${import.meta.env.VITE_BACKEND_URL}/api/v1/registration/recentEventImages");
+
+  //     if (response.data.statusCode <= 200)
+  //       setImages(response?.data?.data?.data);
+  //   }
+  //   getImages();
+  // }, [])
 
   useEffect(() => {
-    const getVenues = async () => {
-      const response = await axios.post(
-        "http://localhost:8080/api/v1/cities/getAllVenuesAtCity",
-        { cityName: selectedCity.cityName ? selectedCity.cityName : "City1111" }
-      );
-      if (response?.data?.statusCode <= 200) {
-        dispatch(setVenues(response.data.data.data))
-      }
+    const fetchData = async () => {
+      const [citiesResponse, reviewsResponse, venuesResponse, imageResponse] =
+        await Promise.all([
+          axios.post(
+            `${
+              import.meta.env.VITE_BACKEND_URL
+            }/api/v1/cities/getAllCitiesExceptSelected`,
+            {
+              excludedCity: selectedCity?.cityName || 'City1111',
+            },
+          ),
+          axios.post(
+            `${
+              import.meta.env.VITE_BACKEND_URL
+            }/api/v1/reviews/getReviewsByType`,
+          ),
+          axios.post(
+            `${
+              import.meta.env.VITE_BACKEND_URL
+            }/api/v1/cities/getAllVenuesAtCity`,
+            {
+              cityName: selectedCity.cityName || 'City1111',
+            },
+          ),
+          axios.get(
+            `${
+              import.meta.env.VITE_BACKEND_URL
+            }/api/v1/registration/recentEventImages`,
+          ),
+        ]);
+
+      setCities(citiesResponse.data.data?.data || []);
+      setReviews(reviewsResponse.data.data?.data || []);
+      setImages(imageResponse?.data?.data?.data || []);
+      dispatch(setVenues(venuesResponse.data.data?.data || []));
     };
-    getVenues();
-  }, [selectedCity]);
 
-  useEffect(() => {
-    const getImages = async() => {
-      const response = await axios.get("http://localhost:8080/api/v1/registration/recentEventImages");
+    fetchData();
+  }, [selectedCity, dispatch]);
 
-      if (response.data.statusCode <= 200)
-        setImages(response?.data?.data?.data);
-    }
-    getImages();
-  }, [])
-
-  const openModal = (modalId) => {
+  const openModal = modalId => {
     setOpenModals({ ...openModals, [modalId]: true });
   };
 
-  const closeModal = (modalId) => {
+  const closeModal = modalId => {
     setOpenModals({ ...openModals, [modalId]: false });
   };
 
-  const scroll = (direction) => {
+  const scroll = direction => {
     if (containerRef.current) {
-      const scrollAmount = direction === "left" ? -200 : 200;
-      containerRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      const scrollAmount = direction === 'left' ? -200 : 200;
+      containerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
 
@@ -120,21 +228,18 @@ const Home = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const handleExploreClick = (city) => {
+  const handleExploreClick = city => {
     dispatch(setSelectedCity(city));
   };
- 
+
   return (
     <div className="min-h-screen">
       <style>{customStyles}</style> {/* Inline styles for headings */}
-
-      <Navbar onSidebarToggle={toggleSidebar} />
       <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
-
       {/* Modals for diff cities */}
       <div className="flex items-center justify-center py-6 pt-20 relative">
         <button
-          onClick={() => scroll("left")}
+          onClick={() => scroll('left')}
           className="absolute left-4 z-10 bg-gray-600 text-white p-2 rounded-full text-2xl font-bold hover:bg-gray-500 transition-colors"
         >
           &lt;
@@ -142,10 +247,10 @@ const Home = () => {
         <div
           ref={containerRef}
           className="flex gap-4 p-4 overflow-x-auto hide-scrollbar"
-          style={{ maxHeight: "200px", whiteSpace: "nowrap" }}
+          style={{ maxHeight: '200px', whiteSpace: 'nowrap' }}
         >
           {cities.length !== 0 ? (
-            cities.map((city) => (
+            cities.map(city => (
               <ModalButton
                 key={city._id}
                 modal={city}
@@ -162,13 +267,13 @@ const Home = () => {
           )}
         </div>
         <button
-          onClick={() => scroll("right")}
+          onClick={() => scroll('right')}
           className="absolute right-4 bg-gray-600 text-white p-2 rounded-full text-2xl font-bold hover:bg-gray-500 transition-colors"
         >
           &gt;
         </button>
 
-        {cities.map((city) => (
+        {cities.map(city => (
           <Modal
             key={city._id}
             isOpen={openModals[city._id]}
@@ -185,7 +290,6 @@ const Home = () => {
           </Modal>
         ))}
       </div>
-
       {/* images carousal */}
       <div className="py-8">
         <h2 className="text-3xl font-bold mb-6 text-center heading-container ml-3 uppercase">
@@ -193,7 +297,6 @@ const Home = () => {
         </h2>
         <Carousal images={images} />
       </div>
-
       {/* exploring locations */}
       <div className="py-8 px-4">
         <h2 className="text-3xl font-bold mb-6 text-center heading-container uppercase">
@@ -201,12 +304,12 @@ const Home = () => {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {venues.length !== 0 ? (
-            venues.map((venue) => (
+            venues.map(venue => (
               <LocationCard
                 key={venue._id}
                 modal={venue}
-                message={"See Location"}
-                navigateTo={"/dateSelector"}
+                message={'See Location'}
+                navigateTo={'/dateSelector'}
                 dispatchAction={setSelectedVenue}
               />
             ))
@@ -220,24 +323,22 @@ const Home = () => {
           )}
         </div>
       </div>
-
       {/* reviews */}
       <div className="pt-5 px-4 bg-gray-900">
         <h2 className="text-3xl font-bold mb-6 text-center heading-container uppercase">
           Latest Reviews
         </h2>
-          {reviews.length !== 0 ? (
-            <ReviewSlider reviews={reviews} /> 
-          ) : (
-            <div className="flex flex-col items-center p-6 w-screen ">
+        {reviews.length !== 0 ? (
+          <ReviewSlider reviews={reviews} />
+        ) : (
+          <div className="flex flex-col items-center p-6 w-screen ">
             <FaCommentDots className="text-6xl text-gray-400 mb-4" />
             <h1 className="text-2xl font-semibold uppercase text-white">
               No reviews to display
             </h1>
           </div>
-          )}
+        )}
       </div>
-
       {/* footer */}
       <Footer />
     </div>

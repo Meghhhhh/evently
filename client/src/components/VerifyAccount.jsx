@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const VerifyAccount = () => {
-  const [otp, setOtp] = useState(new Array(6).fill(""));
-  const [errorMessage, setErrorMessage] = useState("");
+  const [otp, setOtp] = useState(new Array(6).fill(''));
+  const [errorMessage, setErrorMessage] = useState('');
   const [resendCooldown, setResendCooldown] = useState(30);
   const navigate = useNavigate();
 
@@ -15,7 +15,7 @@ const VerifyAccount = () => {
     if (resendCooldown > 0) {
       const timer = setTimeout(
         () => setResendCooldown(resendCooldown - 1),
-        1000
+        1000,
       );
       return () => clearTimeout(timer);
     }
@@ -23,7 +23,7 @@ const VerifyAccount = () => {
 
   const handleChange = (e, index) => {
     const { value } = e.target;
-    if (isNaN(value) || value === "") return;
+    if (isNaN(value) || value === '') return;
 
     setOtp([...otp.map((d, idx) => (idx === index ? value : d))]);
 
@@ -33,11 +33,11 @@ const VerifyAccount = () => {
   };
 
   const handleKeyDown = (e, index) => {
-    if (e.key === "Backspace") {
-      e.preventDefault(); 
+    if (e.key === 'Backspace') {
+      e.preventDefault();
 
       const newOtp = [...otp];
-      newOtp[index] = "";
+      newOtp[index] = '';
       setOtp(newOtp);
 
       if (index > 0) {
@@ -46,34 +46,34 @@ const VerifyAccount = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
 
-    const otpCode = otp.join("");
+    const otpCode = otp.join('');
 
     try {
       await axios.post(
-        "http://localhost:8080/api/v1/users/verify",
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/verify`,
         {
           code: otpCode,
         },
         {
           withCredentials: true,
-        }
+        },
       );
-      toast.success("User Verified successfully!", {
+      toast.success('User Verified successfully!', {
         autoClose: 1500,
         closeButton: false,
       });
       setTimeout(() => {
-        navigate("/");
+        navigate('/');
       }, 1500);
     } catch (error) {
-      toast.error("Verification failed!", {
+      toast.error('Verification failed!', {
         autoClose: 1500,
         closeButton: false,
       });
-      setErrorMessage("Verification failed. Please try again.");
+      setErrorMessage('Verification failed. Please try again.');
     }
   };
 
@@ -82,17 +82,17 @@ const VerifyAccount = () => {
 
     try {
       await axios.post(
-        "http://localhost:8080/api/v1/users/resend-otp",
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/resend-otp`,
         {},
-        { withCredentials: true }
+        { withCredentials: true },
       );
-      toast.success("OTP resent successfully!", {
+      toast.success('OTP resent successfully!', {
         autoClose: 1500,
         closeButton: false,
       });
       setResendCooldown(30);
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to resend OTP", {
+      toast.error(error.response?.data?.message || 'Failed to resend OTP', {
         autoClose: 1500,
         closeButton: false,
       });
@@ -104,7 +104,9 @@ const VerifyAccount = () => {
       <div className="w-full max-w-md space-y-6">
         <div className="text-center">
           <h1 className="text-3xl font-bold">Verify your account</h1>
-          <p className="mt-2 text-sm">Enter the 6-digit code sent to your email.</p>
+          <p className="mt-2 text-sm">
+            Enter the 6-digit code sent to your email.
+          </p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="flex justify-center">
@@ -116,9 +118,9 @@ const VerifyAccount = () => {
                 maxLength="1"
                 key={index}
                 value={data}
-                onChange={(e) => handleChange(e, index)}
-                onKeyDown={(e) => handleKeyDown(e, index)}
-                onFocus={(e) => e.target.select()}
+                onChange={e => handleChange(e, index)}
+                onKeyDown={e => handleKeyDown(e, index)}
+                onFocus={e => e.target.select()}
               />
             ))}
           </div>
@@ -136,10 +138,10 @@ const VerifyAccount = () => {
             onClick={handleResend}
             disabled={resendCooldown > 0}
             className={`text-[#FF5364] hover:underline px-1 ${
-              resendCooldown > 0 ? "opacity-50 cursor-not-allowed" : ""
+              resendCooldown > 0 ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           >
-            Resend {resendCooldown > 0 ? (`${resendCooldown}s`) : ""}
+            Resend {resendCooldown > 0 ? `${resendCooldown}s` : ''}
           </button>
         </div>
       </div>
