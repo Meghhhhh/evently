@@ -53,6 +53,7 @@ const Home = () => {
   const [reviews, setReviews] = useState([]);
   const [openModals, setOpenModals] = useState({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [images, setImages] = useState([]);
   const containerRef = useRef(null);
   const user = useSelector(state => state.user);
@@ -78,10 +79,13 @@ const Home = () => {
         setLastName(obj.lastName || '');
         setContactNumber(obj.contactNumber || '');
       } catch (err) {
-        console.error('error fetching user details!', {
+        toast.error('error fetching user details!', {
           autoClose: 1500,
           closeButton: false,
-        });}
+        });
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchUserDetails();
@@ -167,40 +171,50 @@ const Home = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const [citiesResponse, reviewsResponse, venuesResponse, imageResponse] =
-        await Promise.all([
-          axios.post(
-            `${
-              import.meta.env.VITE_BACKEND_URL
-            }/api/v1/cities/getAllCitiesExceptSelected`,
-            {
-              excludedCity: selectedCity?.cityName || 'City1111',
-            },
-          ),
-          axios.post(
-            `${
-              import.meta.env.VITE_BACKEND_URL
-            }/api/v1/reviews/getReviewsByType`,
-          ),
-          axios.post(
-            `${
-              import.meta.env.VITE_BACKEND_URL
-            }/api/v1/cities/getAllVenuesAtCity`,
-            {
-              cityName: selectedCity.cityName || 'City1111',
-            },
-          ),
-          axios.get(
-            `${
-              import.meta.env.VITE_BACKEND_URL
-            }/api/v1/registration/recentEventImages`,
-          ),
-        ]);
-
-      setCities(citiesResponse.data.data?.data || []);
-      setReviews(reviewsResponse.data.data?.data || []);
-      setImages(imageResponse?.data?.data?.data || []);
-      dispatch(setVenues(venuesResponse.data.data?.data || []));
+      setLoading(true);
+      try {
+        const [citiesResponse, reviewsResponse, venuesResponse, imageResponse] =
+          await Promise.all([
+            axios.post(
+              `${
+                import.meta.env.VITE_BACKEND_URL
+              }/api/v1/cities/getAllCitiesExceptSelected`,
+              {
+                excludedCity: selectedCity?.cityName || 'City1111',
+              },
+            ),
+            axios.post(
+              `${
+                import.meta.env.VITE_BACKEND_URL
+              }/api/v1/reviews/getReviewsByType`,
+            ),
+            axios.post(
+              `${
+                import.meta.env.VITE_BACKEND_URL
+              }/api/v1/cities/getAllVenuesAtCity`,
+              {
+                cityName: selectedCity?.cityName || 'City1111',
+              },
+            ),
+            axios.get(
+              `${
+                import.meta.env.VITE_BACKEND_URL
+              }/api/v1/registration/recentEventImages`,
+            ),
+          ]);
+  
+        setCities(citiesResponse.data.data?.data || []);
+        setReviews(reviewsResponse.data.data?.data || []);
+        setImages(imageResponse?.data?.data?.data || []);
+        dispatch(setVenues(venuesResponse.data.data?.data || []));
+      } catch (error) {
+        toast.error('Error fetching data!', {
+          autoClose: 1500,
+          closeButton: false,
+        });
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchData();
@@ -233,109 +247,115 @@ const Home = () => {
     <div className="min-h-screen">
       <style>{customStyles}</style> {/* Inline styles for headings */}
       <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
-      {/* Modals for diff cities */}
-      <div className="flex items-center justify-center py-6 pt-20 relative">
-        <button
-          onClick={() => scroll('left')}
-          className="absolute left-4 z-10 bg-gray-600 text-white p-2 rounded-full text-2xl font-bold hover:bg-gray-500 transition-colors"
-        >
-          &lt;
-        </button>
-        <div
-          ref={containerRef}
-          className="flex gap-4 p-4 overflow-x-auto hide-scrollbar"
-          style={{ maxHeight: '200px', whiteSpace: 'nowrap' }}
-        >
-          {cities.length !== 0 ? (
-            cities.map(city => (
-              <ModalButton
-                key={city._id}
-                modal={city}
-                onClick={() => openModal(city._id)}
-              />
-            ))
-          ) : (
-            <div className="flex flex-col items-center text-center p-6">
-              <FaCity className="text-6xl text-gray-400 mb-4" />
-              <h1 className="text-xl font-semibold uppercase">
-                No cities to display currently
-              </h1>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <>
+          {/* Modals for diff cities */}
+          <div className="flex items-center justify-center py-6 pt-20 relative">
+            <button
+              onClick={() => scroll('left')}
+              className="absolute left-4 z-10 bg-gray-600 text-white p-2 rounded-full text-2xl font-bold hover:bg-gray-500 transition-colors"
+            >
+              &lt;
+            </button>
+            <div
+              ref={containerRef}
+              className="flex gap-4 p-4 overflow-x-auto hide-scrollbar"
+              style={{ maxHeight: '200px', whiteSpace: 'nowrap' }}
+            >
+              {cities.length !== 0 ? (
+                cities.map(city => (
+                  <ModalButton
+                    key={city._id}
+                    modal={city}
+                    onClick={() => openModal(city._id)}
+                  />
+                ))
+              ) : (
+                <div className="flex flex-col items-center text-center p-6">
+                  <FaCity className="text-6xl text-gray-400 mb-4" />
+                  <h1 className="text-xl font-semibold uppercase">
+                    No cities to display currently
+                  </h1>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-        <button
-          onClick={() => scroll('right')}
-          className="absolute right-4 bg-gray-600 text-white p-2 rounded-full text-2xl font-bold hover:bg-gray-500 transition-colors"
-        >
-          &gt;
-        </button>
+            <button
+              onClick={() => scroll('right')}
+              className="absolute right-4 bg-gray-600 text-white p-2 rounded-full text-2xl font-bold hover:bg-gray-500 transition-colors"
+            >
+              &gt;
+            </button>
 
-        {cities.map(city => (
-          <Modal
-            key={city._id}
-            isOpen={openModals[city._id]}
-            onClose={() => closeModal(city._id)}
-            city={city}
-            handleExploreClick={handleExploreClick}
-          >
-            <img
-              src={city.cityImage}
-              alt={city.cityName}
-              className=" min-w-90 min-h"
-            />
-            <p className="text-black mt-2">{city.cityDescription}</p>
-          </Modal>
-        ))}
-      </div>
-      {/* images carousal */}
-      <div className="py-8">
-        <h2 className="text-3xl font-bold mb-6 text-center heading-container ml-3 uppercase">
-          Recent Events
-        </h2>
-        <Carousal images={images} />
-      </div>
-      {/* exploring locations */}
-      <div className="py-8 px-4">
-        <h2 className="text-3xl font-bold mb-6 text-center heading-container uppercase">
-          {`Explore locations at ${selectedCity.cityName}`}
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {venues.length !== 0 ? (
-            venues.map(venue => (
-              <LocationCard
-                key={venue._id}
-                modal={venue}
-                message={'See Location'}
-                navigateTo={'/dateSelector'}
-                dispatchAction={setSelectedVenue}
-              />
-            ))
-          ) : (
-            <div className="flex flex-col items-center text-center p-6 w-screen">
-              <FaMapMarkerAlt className="text-6xl text-gray-400 mb-4" />
-              <h1 className="text-2xl font-semibold uppercase">
-                No venues available at the city...
-              </h1>
-            </div>
-          )}
-        </div>
-      </div>
-      {/* reviews */}
-      <div className="pt-5 px-4 bg-gray-900">
-        <h2 className="text-3xl font-bold mb-6 text-center heading-container uppercase">
-          Latest Reviews
-        </h2>
-        {reviews.length !== 0 ? (
-          <ReviewSlider reviews={reviews} />
-        ) : (
-          <div className="flex flex-col items-center p-6 w-screen ">
-            <FaCommentDots className="text-6xl text-gray-400 mb-4" />
-            <h1 className="text-2xl font-semibold uppercase text-white">
-              No reviews to display
-            </h1>
+            {cities.map(city => (
+              <Modal
+                key={city._id}
+                isOpen={openModals[city._id]}
+                onClose={() => closeModal(city._id)}
+                city={city}
+                handleExploreClick={handleExploreClick}
+              >
+                <img
+                  src={city.cityImage}
+                  alt={city.cityName}
+                  className=" min-w-90 min-h"
+                />
+                <p className="text-black mt-2">{city.cityDescription}</p>
+              </Modal>
+            ))}
           </div>
-        )}
-      </div>
+          {/* images carousal */}
+          <div className="py-8">
+            <h2 className="text-3xl font-bold mb-6 text-center heading-container ml-3 uppercase">
+              Recent Events
+            </h2>
+            <Carousal images={images} />
+          </div>
+          {/* exploring locations */}
+          <div className="py-8 px-4">
+            <h2 className="text-3xl font-bold mb-6 text-center heading-container uppercase">
+              {`Explore locations at ${selectedCity?.cityName}`}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {venues.length !== 0 ? (
+                venues.map(venue => (
+                  <LocationCard
+                    key={venue._id}
+                    modal={venue}
+                    message={'See Location'}
+                    navigateTo={'/dateSelector'}
+                    dispatchAction={setSelectedVenue}
+                  />
+                ))
+              ) : (
+                <div className="flex flex-col items-center text-center p-6 w-screen">
+                  <FaMapMarkerAlt className="text-6xl text-gray-400 mb-4" />
+                  <h1 className="text-2xl font-semibold uppercase">
+                    No venues available at the city...
+                  </h1>
+                </div>
+              )}
+            </div>
+          </div>
+          {/* reviews */}
+          <div className="pt-5 px-4 bg-gray-900">
+            <h2 className="text-3xl font-bold mb-6 text-center heading-container uppercase">
+              Latest Reviews
+            </h2>
+            {reviews.length !== 0 ? (
+              <ReviewSlider reviews={reviews} />
+            ) : (
+              <div className="flex flex-col items-center p-6 w-screen ">
+                <FaCommentDots className="text-6xl text-gray-400 mb-4" />
+                <h1 className="text-2xl font-semibold uppercase text-white">
+                  No reviews to display
+                </h1>
+              </div>
+            )}
+          </div>
+        </>
+      )}
       {/* footer */}
       <Footer />
     </div>
