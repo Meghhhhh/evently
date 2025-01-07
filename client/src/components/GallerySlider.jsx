@@ -80,7 +80,6 @@ const GallerySlider = ({
         delay: 2000,
         disableOnInteraction: false,
       }}
-      navigation={true}
       modules={[Autoplay, Navigation]}
       breakpoints={{
         320: {

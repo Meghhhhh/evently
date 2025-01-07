@@ -23,7 +23,7 @@ export default {
 
         purple:"#9333ea",
         darkbg:"#111827",
-        gray:"#1f2937",
+        gray:"#1f2937", 
         gry:"#374151",
         lightpurple:"#a855f7",
 
