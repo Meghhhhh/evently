@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        primaryBlack: "#000000",
+        primaryBlack: "#111827",
         primaryPeach: "#FF5364",
         darkGray: "#5A5A5A",
         mediumGray: "#B3B3B3",
@@ -19,7 +19,18 @@ export default {
         offwhite: "#f2f2f2",
         darkgrey: "#5a5a5a",
         grey: "#b3b3b3",
-        mauve: "#ff5364",
+        mauve: "#9333ea",
+
+        purple:"#9333ea",
+        darkbg:"#111827",
+        gray:"#1f2937",
+        gry:"#374151",
+        lightpurple:"#a855f7",
+
+        purpl:"#7e22ce",
+        pupll:"#a667dd",
+        lgrey:"#f3f4f6",
+        
       },
     },
     // screens: {

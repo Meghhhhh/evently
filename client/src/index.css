@@ -5,12 +5,12 @@
 @layer base {
   :root {
     --background: 255, 255, 255; /* Light background */
-    --foreground: 0, 0, 0; /* Light text color */
+    --foreground: #9333ea /* Light text color */
   }
 
   .dark {
-    --background: 0, 0, 0; /* Dark background */
-    --foreground: #f2f2f2; /* Dark text color */
+    --background: #111827; /* Dark background */
+    --foreground: #7e22ce /* Dark text color */
   }
   * {
     margin: 0;
@@ -19,8 +19,8 @@
   body {
     background-color: rgb(var(--background));
     color: var(--foreground);
-    /* transition: background-color 0.3s ease, color 0.3s ease; */
   }
+  
 }
 .hide-scrollbar::-webkit-scrollbar {
   display: none;

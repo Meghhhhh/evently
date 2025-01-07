@@ -127,7 +127,7 @@ const Registration = () => {
   }, [selectedVenue]);
 
   return (
-    <div className="bg-black min-h-screen w-full pt-20">
+    <div className="min-h-screen w-full pt-20">
       {/* Pass the dynamically fetched userId */}
       <GallerySlider
         slides={2}
@@ -143,7 +143,7 @@ const Registration = () => {
       <div className="flex flex-col md:flex-row">
         <p className="text-grey px-10 my-10 w-[100%] text-xl">
           {selectedVenue.venueDescription}
-        </p>
+        </p> 
       </div>
 
       <p className="text-offwhite text-6xl text-center mt-20 font-semibold">
