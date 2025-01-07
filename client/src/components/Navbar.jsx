@@ -1,26 +1,31 @@
-import React, { useState, useEffect } from "react";
-import { FaSearch, FaBars } from "react-icons/fa";
-import { CgProfile } from "react-icons/cg";
-import { IoCartOutline } from "react-icons/io5";
-import { BiLogIn } from "react-icons/bi";
-import ThemeConverter from "./ThemeConvertor";
-import Cookies from "js-cookie";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { FaSearch, FaBars } from 'react-icons/fa';
+import { CgProfile } from 'react-icons/cg';
+import { IoCartOutline } from 'react-icons/io5';
+import { BiLogIn } from 'react-icons/bi';
+import ThemeConverter from './ThemeConvertor';
+import Cookies from 'js-cookie';
+import Logo from '../assets/logo.png';
+import { Link } from 'react-router-dom';
 
 const Navbar = ({ onSidebarToggle }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const userToken = Cookies.get("accessToken");
+    const userToken = Cookies.get('accessToken');
 
     setIsLoggedIn(!!userToken);
   }, []);
 
   return (
     <nav className="h-16 w-full flex items-center justify-between bg-white text-black p-4 shadow-lg bg-opacity-90 backdrop-blur-sm fixed z-50 top-0">
-      <div className="text-xl font-bold">logo</div>
+      <div className="text-xl font-bold">
+        <Link to="/home">
+          <img src={Logo} alt="Logo" width="114px" height="114px" className="" />
+        </Link>
+      </div>
 
-      <div className="hidden sm:flex lg:space-x-12">
+      {/* <div className="hidden sm:flex lg:space-x-12"> */}
         {/* <a
           href="#home"
           className="hover:bg-lightgreyplusplus hover:text-white font-bold px-3 py-1 rounded-md transition-all duration-300"
@@ -45,8 +50,7 @@ const Navbar = ({ onSidebarToggle }) => {
         >
           Contact
         </a> */}
-      </div>
-
+      {/* </div> */}
 
       <div className="flex items-center">
         <div className="relative lg:block">
@@ -84,7 +88,6 @@ const Navbar = ({ onSidebarToggle }) => {
             </Link>
           )}
         </div>
-
       </div>
 
       <button className="sm:hidden text-2xl" onClick={onSidebarToggle}>
