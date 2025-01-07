@@ -70,7 +70,7 @@ import axios from 'axios'
   const truncateWords = 20; 
 
   return (
-    <div className="text-white">
+    <div className="">
       <div className="my-[50px] h-[184px] max-w-maxContentTab lg:max-w-maxContent">
         <Swiper
           breakpoints={{
@@ -91,13 +91,12 @@ import axios from 'axios'
             delay: 2000,
             disableOnInteraction: false,
           }}
-          navigation={true}
           modules={[FreeMode, Pagination, Autoplay]}
           className="w-full"
         >
           {reviews.map((review, i) => (
             <SwiperSlide key={i}>
-              <div className="flex flex-col gap-3 bg-richblack-800 p-3 text-[14px] text-offwhite border-2 rounded-md">
+              <div className="flex flex-col gap-3  p-3 text-[14px] bg-gry rounded-md">
                 <div className="flex items-center gap-4">
                   <img
                     src={

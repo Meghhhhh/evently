@@ -136,22 +136,22 @@ const Registration = () => {
         btn={'Add to cart'}
         userId={user._id} // Use the userId from Redux
       />
-      <p className="text-offwhite text-6xl pb-2 px-10 font-bold">
+      <p className="text-4xl md:text-5xl lg:text-6xl pb-2 px-10 font-bold">
         {selectedVenue.venueName}
       </p>
-      <div className="bg-mauve w-[40%] h-[5px] mx-10 mb-10 rounded-full"></div>
+      <div className="bg-pupll w-[40%] h-[5px] mx-10 mb-10 rounded-full"></div>
       <div className="flex flex-col md:flex-row">
-        <p className="text-grey px-10 my-10 w-[100%] text-xl">
+        <p className=" px-10 my-10 w-[100%] text-xl">
           {selectedVenue.venueDescription}
         </p> 
       </div>
 
-      <p className="text-offwhite text-6xl text-center mt-20 font-semibold">
+      <p className="text-4xl md:text-5xl lg:text-6xl text-center mt-20 font-semibold">
         Reviews from users conducting events here!
       </p>
       <ReviewSlider reviews={reviews} />
 
-      <p className="text-offwhite text-6xl text-center mt-20 font-semibold">
+      <p className=" text-4xl md:text-5xl lg:text-6xl text-center mt-20 font-semibold">
         CATERER
       </p>
       <GallerySlider2
@@ -161,7 +161,7 @@ const Registration = () => {
         btn={'Explore Now'}
       />
 
-      <p className="text-offwhite text-6xl text-center mt-20 font-semibold">
+      <p className=" text-4xl md:text-5xl lg:text-6xl text-center mt-20 font-semibold">
         DECORATOR
       </p>
       <GallerySlider2
