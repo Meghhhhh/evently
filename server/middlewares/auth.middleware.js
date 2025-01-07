@@ -5,6 +5,7 @@ const { User } = require("../models/user.model.js");
 
 const verifyJWT = asyncHandler(async (req, _, next) => {
   try {
+    console.log("token : " + token + "Cookies : " + req.cookies);
     const token =
       req.cookies?.accessToken ||
       req.header("Authorization")?.replace("Bearer ", "");
@@ -27,6 +28,7 @@ const verifyJWT = asyncHandler(async (req, _, next) => {
     req.user = user;
     next();
   } catch (error) {
+    console.log("token : " + token + "Cookies : " + req.cookies);
     throw new ApiError(401, error?.message || "Invalid access token");
   }
 });
