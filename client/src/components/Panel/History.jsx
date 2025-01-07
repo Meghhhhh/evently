@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const History = () => {
   const [events, setEvents] = useState([]);
@@ -8,15 +8,15 @@ const History = () => {
     const fetchEvents = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/v1/registration/getUserEvents",
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/registration/getUserEvents`,
           {
             withCredentials: true,
-          }
+          },
         );
         console.log(response.data.data);
         setEvents(response.data.data);
       } catch (error) {
-        console.error("Error fetching events:", error.message);
+        console.error('Error fetching events:', error.message);
       }
     };
 
@@ -44,15 +44,15 @@ const History = () => {
                 {event.firstName} {event.lastName}
               </h2>
               <p>
-                {new Date(event.startDate).toLocaleDateString()} -{" "}
+                {new Date(event.startDate).toLocaleDateString()} -{' '}
                 {new Date(event.endDate).toLocaleDateString()}
               </p>
               <p
                 className={`text-sm ${
-                  event.hasHappened ? "text-green-500" : "text-blue-500"
+                  event.hasHappened ? 'text-green-500' : 'text-blue-500'
                 }`}
               >
-                {event.hasHappened ? "Event Completed" : "Upcoming Event"}
+                {event.hasHappened ? 'Event Completed' : 'Upcoming Event'}
               </p>
               <p className="mt-2">Cost: ${event.cost}</p>
               <div className="mt-4">
@@ -60,11 +60,11 @@ const History = () => {
                 <ul className="list-disc list-inside">
                   {event.vendors.map((vendor, i) => (
                     <li key={i}>
-                      {vendor.vendorId.vendorType}:{" "}
-                      {vendor.vendorId.serviceName || "N/A"}
+                      {vendor.vendorId.vendorType}:{' '}
+                      {vendor.vendorId.serviceName || 'N/A'}
                     </li>
                   ))}
-                  <li>Venue: {event.venue?.venueName || "N/A"}</li>
+                  <li>Venue: {event.venue?.venueName || 'N/A'}</li>
                 </ul>
               </div>
             </div>

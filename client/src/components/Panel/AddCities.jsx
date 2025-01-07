@@ -1,9 +1,9 @@
-import axios from "axios";
-import React, { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { ToastContainer } from "react-toastify";
-import { hourglass } from "ldrs";
+import axios from 'axios';
+import React, { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import { hourglass } from 'ldrs';
 
 hourglass.register();
 
@@ -12,41 +12,41 @@ const AddCities = () => {
   const cityDescriptionRef = useRef(null);
   const imageRef = useRef(null);
   const navigate = useNavigate();
-  const [imageName, setImageName] = useState("");
+  const [imageName, setImageName] = useState('');
   const [loader, setLoader] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setLoader(true);
 
     const formData = new FormData();
-    formData.append("cityName", cityNameRef.current.value || "");
-    formData.append("cityDescription", cityDescriptionRef.current.value || "");
-    formData.append("image", imageRef.current.files[0] || "");
+    formData.append('cityName', cityNameRef.current.value || '');
+    formData.append('cityDescription', cityDescriptionRef.current.value || '');
+    formData.append('image', imageRef.current.files[0] || '');
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/cities/postCity",
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/cities/postCity`,
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            'Content-Type': 'multipart/form-data',
           },
-        }
+        },
       );
 
       if (response.data.statusCode === 200) {
-        toast.success("City added successfully!");
+        toast.success('City added successfully!');
         setTimeout(() => {
-          navigate("/panel/cities");
+          navigate('/panel/cities');
         }, 2000);
       }
     } catch (error) {
       if (error.response && error.response.data) {
         const { message } = error.response.data;
-        toast.error(message || "Failed to add city.");
+        toast.error(message || 'Failed to add city.');
       } else {
-        toast.error("An unexpected error occurred.");
+        toast.error('An unexpected error occurred.');
       }
     } finally {
       setLoader(false);
@@ -138,7 +138,7 @@ const AddCities = () => {
                 color="black"
               ></l-hourglass>
             ) : (
-              "Add City"
+              'Add City'
             )}
           </button>
         </form>

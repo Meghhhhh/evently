@@ -1,10 +1,10 @@
-import axios from "axios";
-import React, { useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { ToastContainer } from "react-toastify";
-import { hourglass } from "ldrs";
+import axios from 'axios';
+import React, { useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import { hourglass } from 'ldrs';
 
 hourglass.register();
 
@@ -14,51 +14,51 @@ const AddVenue = () => {
   const venueDescriptionRef = useRef(null);
   const imageRef = useRef(null);
   const navigate = useNavigate();
-  const { selectedCity } = useSelector((state) => state.city);
-  const [imageName, setImageName] = useState("");
+  const { selectedCity } = useSelector(state => state.city);
+  const [imageName, setImageName] = useState('');
   const [loader, setLoader] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setLoader(true);
 
     const formData = new FormData();
-    formData.append("venueName", venueNameRef.current.value || "");
+    formData.append('venueName', venueNameRef.current.value || '');
     formData.append(
-      "venueCity",
+      'venueCity',
       selectedCity?.cityName
         ? selectedCity.cityName
-        : venueCityRef.current.value
+        : venueCityRef.current.value,
     );
     formData.append(
-      "venueDescription",
-      venueDescriptionRef.current.value || ""
+      'venueDescription',
+      venueDescriptionRef.current.value || '',
     );
-    formData.append("image", imageRef.current.files[0] || "");
+    formData.append('image', imageRef.current.files[0] || '');
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/cities/postVenueAtCity",
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/cities/postVenueAtCity`,
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            'Content-Type': 'multipart/form-data',
           },
-        }
+        },
       );
 
       if (response.data.statusCode === 200) {
-        toast.success("Venue added successfully!");
+        toast.success('Venue added successfully!');
         setTimeout(() => {
-          navigate("/panel/cities");
+          navigate('/panel/cities');
         }, 2000);
       }
     } catch (error) {
       if (error.response && error.response.data) {
         const { message } = error.response.data;
-        toast.error(message || "Failed to add venue.");
+        toast.error(message || 'Failed to add venue.');
       } else {
-        toast.error("An unexpected error occurred.");
+        toast.error('An unexpected error occurred.');
       }
     } finally {
       setLoader(false);
@@ -106,7 +106,7 @@ const AddVenue = () => {
               ref={venueCityRef}
               placeholder="Enter venue city"
               className="w-full p-3 rounded-lg bg-gray-700 text-gray-300"
-              value={selectedCity?.cityName || ""}
+              value={selectedCity?.cityName || ''}
               disabled={!!selectedCity}
             />
           </div>
@@ -165,7 +165,7 @@ const AddVenue = () => {
                 color="black"
               ></l-hourglass>
             ) : (
-              "Add Venue"
+              'Add Venue'
             )}
           </button>
         </form>

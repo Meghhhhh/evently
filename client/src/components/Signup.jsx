@@ -1,55 +1,55 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { toast } from "react-toastify";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import Cookies from "js-cookie";
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Cookies from 'js-cookie';
 
 const Signup = () => {
   const features = [
     {
       id: 1,
-      bgClass: "bg-guest-list",
-      text: "Manage guest lists with ease and track RSVPs in real-time.",
+      bgClass: 'bg-guest-list',
+      text: 'Manage guest lists with ease and track RSVPs in real-time.',
     },
     {
       id: 2,
-      bgClass: "bg-budget",
-      text: "Stay on budget with our powerful expense tracking tools.",
+      bgClass: 'bg-budget',
+      text: 'Stay on budget with our powerful expense tracking tools.',
     },
     {
       id: 3,
-      bgClass: "bg-task",
-      text: "Assign and track tasks to ensure nothing is missed.",
+      bgClass: 'bg-task',
+      text: 'Assign and track tasks to ensure nothing is missed.',
     },
     {
       id: 4,
-      bgClass: "bg-vendor",
-      text: "Coordinate with vendors and manage contracts effortlessly.",
+      bgClass: 'bg-vendor',
+      text: 'Coordinate with vendors and manage contracts effortlessly.',
     },
     {
       id: 5,
-      bgClass: "bg-invite",
-      text: "Design and distribute beautiful invitations with our templates.",
+      bgClass: 'bg-invite',
+      text: 'Design and distribute beautiful invitations with our templates.',
     },
     {
       id: 6,
-      bgClass: "bg-seating",
-      text: "Create interactive seating arrangements with ease.",
+      bgClass: 'bg-seating',
+      text: 'Create interactive seating arrangements with ease.',
     },
   ];
 
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    contactNumber: "",
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    contactNumber: '',
   });
 
-  const [passwordValid, setPasswordValid] = useState("initial"); // Start with "initial" state
+  const [passwordValid, setPasswordValid] = useState('initial'); // Start with "initial" state
   const [passwordErrors, setPasswordErrors] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
   const [isVendor, setIsVendor] = useState(false);
@@ -57,92 +57,92 @@ const Signup = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const validatePassword = (password) => {
+    const validatePassword = password => {
       const errors = [];
       if (!/[A-Z]/.test(password))
-        errors.push("Must contain an uppercase letter.");
+        errors.push('Must contain an uppercase letter.');
       if (!/[a-z]/.test(password))
-        errors.push("Must contain a lowercase letter.");
-      if (!/[0-9]/.test(password)) errors.push("Must contain a number.");
+        errors.push('Must contain a lowercase letter.');
+      if (!/[0-9]/.test(password)) errors.push('Must contain a number.');
       if (!/[!@#$%^&*]/.test(password))
-        errors.push("Must contain a special character.");
+        errors.push('Must contain a special character.');
       if (password.length < 8)
-        errors.push("Must be at least 8 characters long.");
+        errors.push('Must be at least 8 characters long.');
 
       setPasswordErrors(errors);
       setPasswordValid(errors.length === 0 ? true : false);
     };
 
-    if (formData.password !== "") {
+    if (formData.password !== '') {
       validatePassword(formData.password);
     }
   }, [formData.password]);
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { id, value } = e.target;
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
       [id]: value,
     }));
 
     // Reset passwordValid to "initial" if the password field is empty
-    if (id === "password" && value === "") {
-      setPasswordValid("initial");
+    if (id === 'password' && value === '') {
+      setPasswordValid('initial');
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error('Passwords do not match');
       return;
     }
 
     if (!passwordValid) {
-      toast.error("Password does not meet the requirements");
+      toast.error('Password does not meet the requirements');
       return;
     }
 
     if (!/^\d{10}$/.test(formData.contactNumber)) {
-      toast.error("Contact number must be exactly 10 digits");
+      toast.error('Contact number must be exactly 10 digits');
       return;
     }
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/users/register",
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/register`,
         {
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
           password: formData.password,
           contactNumber: formData.contactNumber,
-          userType: isVendor ? "vendor" : "ordinary",
-        }
+          userType: isVendor ? 'vendor' : 'ordinary',
+        },
       );
       const { accessToken, refreshToken } = response.data.data;
 
-      Cookies.set("accessToken", accessToken, {
+      Cookies.set('accessToken', accessToken, {
         expires: 1,
         secure: true,
-        sameSite: "Strict",
+        sameSite: 'Strict',
       });
-      Cookies.set("refreshToken", refreshToken, {
+      Cookies.set('refreshToken', refreshToken, {
         expires: 10,
         secure: true,
-        sameSite: "Strict",
+        sameSite: 'Strict',
       });
 
-      toast.success("User registered successfully!", {
+      toast.success('User registered successfully!', {
         autoClose: 1500,
         closeButton: false,
       });
       setTimeout(() => {
-        navigate("/auth/verify");
+        navigate('/auth/verify');
       }, 1500);
     } catch (err) {
-      toast.error(err.response?.data?.message || "An error occurred");
+      toast.error(err.response?.data?.message || 'An error occurred');
       console.log(err);
     }
   };
@@ -162,7 +162,7 @@ const Signup = () => {
         <h3 className="font-semibold text-xl">Why sign up?</h3>
 
         <div className="flex flex-wrap mt-4">
-          {features.map((feature) => (
+          {features.map(feature => (
             <div
               key={feature.id}
               className="flex flex-col items-center justify-center text-center w-1/3 max-[990px]:w-1/2 max-[400px]:w-full p-2"
@@ -254,11 +254,11 @@ const Signup = () => {
 
           <fieldset
             className={`border-2 rounded-lg mb-4 ${
-              passwordValid === "initial"
-                ? "border-gray-300"
+              passwordValid === 'initial'
+                ? 'border-gray-300'
                 : passwordValid
-                ? "border-green-500"
-                : "border-red-500"
+                ? 'border-green-500'
+                : 'border-red-500'
             }`}
           >
             <legend className="text-left px-1">Password</legend>
@@ -272,7 +272,7 @@ const Signup = () => {
               onChange={handleChange}
               required
             />
-            {passwordValid !== "initial" && !passwordValid && (
+            {passwordValid !== 'initial' && !passwordValid && (
               <div className="text-left text-red text-sm m-2">
                 <ul>
                   {passwordErrors.map((error, index) => (
@@ -287,7 +287,7 @@ const Signup = () => {
             <legend className="text-left px-1">Confirm Password</legend>
 
             <input
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               id="confirmPassword"
               className="p-2 w-full border-none outline-none bg-transparent rounded-md"
               placeholder="Confirm your password"
@@ -302,7 +302,7 @@ const Signup = () => {
               type="checkbox"
               id="showPassword"
               checked={showPassword}
-              onChange={() => setShowPassword((prev) => !prev)}
+              onChange={() => setShowPassword(prev => !prev)}
             />
             <label htmlFor="showPassword" className="ml-2">
               Show Password
@@ -313,7 +313,7 @@ const Signup = () => {
               type="checkbox"
               id="isVendor"
               checked={isVendor}
-              onChange={() => setIsVendor((prev) => !prev)}
+              onChange={() => setIsVendor(prev => !prev)}
             />
             <label htmlFor="isVendor" className="ml-2">
               Sign up as a vendor
