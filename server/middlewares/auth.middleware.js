@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const { User } = require("../models/user.model.js");
 
 const verifyJWT = asyncHandler(async (req, _, next) => {
+  console.log("inside verifyJWT");
   try {
     console.log("token : " + token + "Cookies : " + req.cookies);
     const token =
