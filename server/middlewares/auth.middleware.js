@@ -34,12 +34,16 @@ const { User } = require("../models/user.model.js");
 //   }
 // });
 const verifyJWT = asyncHandler(async (req, res, next) => {
+  console.log("inside verifyJWT");
+  
   try {
       let token = req.cookies?.accessToken;
+      console.log("token: ", token);
       
       // If no cookie, check Authorization header
       if (!token) {
           const authHeader = req.header('Authorization');
+          
           if (authHeader && authHeader.startsWith('Bearer ')) {
               token = authHeader.substring(7);
           }
