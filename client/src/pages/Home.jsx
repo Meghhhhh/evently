@@ -75,11 +75,8 @@ const Home = () => {
             contactNumber: obj.contactNumber,
           }),
         );
-        setFirstName(obj.firstName || '');
-        setLastName(obj.lastName || '');
-        setContactNumber(obj.contactNumber || '');
       } catch (err) {
-        console.error('error fetching user details!');
+        console.error('error fetching user details!' + err.message);
       } finally {
         setLoading(false);
       }
