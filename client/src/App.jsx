@@ -70,12 +70,12 @@ function App() {
             </>
           ) : (
             <>
-              <Route path="/auth/signup" element={<Signup />} />
-              <Route path="/auth/signin" element={<Signin />} />
-              <Route path="/auth/verify" element={<VerifyAccount />} />
-              <Route path="/auth/reset-password" element={<PasswordReset />} />
             </>
           )}
+          <Route path="/auth/signup" element={<Signup />} />
+          <Route path="/auth/signin" element={<Signin />} />
+          <Route path="/auth/verify" element={<VerifyAccount />} />
+          <Route path="/auth/reset-password" element={<PasswordReset />} />
 
           <Route path="/vendor/:vendorId" element={<Vendor />} />
           <Route path="/dateSelector" element={<CustomDatePicker />} />
