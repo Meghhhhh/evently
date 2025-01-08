@@ -79,10 +79,7 @@ const Home = () => {
         setLastName(obj.lastName || '');
         setContactNumber(obj.contactNumber || '');
       } catch (err) {
-        toast.error('error fetching user details!', {
-          autoClose: 1500,
-          closeButton: false,
-        });
+        console.error('error fetching user details!');
       } finally {
         setLoading(false);
       }
@@ -208,10 +205,7 @@ const Home = () => {
         setImages(imageResponse?.data?.data?.data || []);
         dispatch(setVenues(venuesResponse.data.data?.data || []));
       } catch (error) {
-        toast.error('Error fetching data!', {
-          autoClose: 1500,
-          closeButton: false,
-        });
+        console.error('Error fetching data!');
       } finally {
         setLoading(false);
       }
