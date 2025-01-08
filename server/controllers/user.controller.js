@@ -131,9 +131,9 @@ const registerUser = asyncHandler(async (req, res) => {
   // Cookie options
   const options = {
     httpOnly: true,
-    secure: process.env.NODE_ENV == "production", // true in production
-    sameSite: process.env.NODE_ENV == "production" ? "none" : "lax", // important for cross-site
-    domain: process.env.NODE_ENV == "production" ? ".vercel.app" : "localhost",
+    secure: true, // true in production
+    sameSite: "none", // important for cross-site
+    domain: ".vercel.app",
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
   };
   console.log(options);
@@ -184,9 +184,9 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
-    secure: process.env.NODE_ENV == "production", // true in production
-    sameSite: process.env.NODE_ENV == "production" ? "none" : "lax", // important for cross-site
-    domain: process.env.NODE_ENV == "production" ? ".vercel.app" : "localhost",
+    secure: true, // true in production
+    sameSite: "none", // important for cross-site
+    domain: ".vercel.app",
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
   };
   console.log(options);
@@ -223,9 +223,9 @@ const logoutUser = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
-    secure: process.env.NODE_ENV == "production", // true in production
-    sameSite: process.env.NODE_ENV == "production" ? "none" : "lax", // important for cross-site
-    domain: process.env.NODE_ENV == "production" ? ".vercel.app" : "localhost",
+    secure: true, // true in production
+    sameSite: "none", // important for cross-site
+    domain: ".vercel.app",
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
   };
   console.log(options);
@@ -263,9 +263,9 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
     const options = {
       httpOnly: true,
-      secure: process.env.NODE_ENV == "production", // true in production
-      sameSite: process.env.NODE_ENV == "production" ? "none" : "lax", // important for cross-site
-      domain: process.env.NODE_ENV == "production" ? ".vercel.app" : "localhost",
+      secure: true, // true in production
+      sameSite: "none", // important for cross-site
+      domain: ".vercel.app",
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     };
     console.log(options);
