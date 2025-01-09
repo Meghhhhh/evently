@@ -38,7 +38,7 @@ const verifyJWT = asyncHandler(async (req, res, next) => {
   
   try {
       console.log(req.cookies + req.body);
-      let token = req.cookies?.accessToken || req.body.cookies.accessToken;
+      let token = req.cookies?.accessToken || req.body.accessToken;
       
       // If no cookie, check Authorization header
       if (!token) {
