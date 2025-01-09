@@ -60,7 +60,7 @@ const Home = () => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(
+        const response = await axios.post(
           `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/current-user`,
           {
             withCredentials: true,
