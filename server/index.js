@@ -23,7 +23,9 @@ const cartRouter = require("./routes/cart.routes.js");
 dotenv.config();
 
 const app = express();
-
+app.use(helmet());
+app.use(express.json());
+app.use(cookieParser());
 
 app.use(
   cors({
@@ -37,9 +39,6 @@ app.use(
 );
 
 
-app.use(helmet());
-app.use(express.json());
-app.use(cookieParser());
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:5173'); // Adjust for local frontend
   res.header('Access-Control-Allow-Credentials', 'true'); // Ensure credentials are allowed
