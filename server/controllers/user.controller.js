@@ -132,8 +132,8 @@ const registerUser = asyncHandler(async (req, res) => {
   const options = {
     httpOnly: true,
     secure: true, // true in production
-    sameSite: "none", // important for cross-site
-    domain: ".vercel.app",
+    sameSite: "None", // important for cross-site
+    // domain: ".vercel.app",
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
   };
   console.log(options);
@@ -185,8 +185,8 @@ const loginUser = asyncHandler(async (req, res) => {
   const options = {
     httpOnly: true,
     secure: true, // true in production
-    sameSite: "none", // important for cross-site
-    domain: ".vercel.app",
+    sameSite: "None", // important for cross-site
+    // domain: ".vercel.app",
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
   };
   console.log(options);
@@ -224,8 +224,8 @@ const logoutUser = asyncHandler(async (req, res) => {
   const options = {
     httpOnly: true,
     secure: true, // true in production
-    sameSite: "none", // important for cross-site
-    domain: ".vercel.app",
+    sameSite: "None", // important for cross-site
+    // domain: ".vercel.app",
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
   };
   console.log(options);
@@ -264,8 +264,8 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     const options = {
       httpOnly: true,
       secure: true, // true in production
-      sameSite: "none", // important for cross-site
-      domain: ".vercel.app",
+      sameSite: "None", // important for cross-site
+      // domain: ".vercel.app",
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     };
     console.log(options);

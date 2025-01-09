@@ -41,9 +41,11 @@ app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:5173'); // Adjust for local frontend
+  res.header('Access-Control-Allow-Credentials', 'true'); // Ensure credentials are allowed
   next();
 });
+
 app.use((req, res, next) => {
   console.log('Cookies:', req.cookies);
   console.log('Headers:', req.headers);
