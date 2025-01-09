@@ -9,7 +9,12 @@ const {
 const {
   sendForgotPasswordEmail,
 } = require("../helpers/sendForgotPasswordEmail.js");
-
+const getCookieOptions = () => ({
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+  maxAge: 24 * 60 * 60 * 1000,
+});
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
     const user = await User.findById(userId);
@@ -129,14 +134,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   // Cookie options
-  const options = {
-    httpOnly: true,
-    secure: true, // true in production
-    sameSite: "None", // important for cross-site
-    // domain: ".vercel.app",
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
-  };
-  console.log(options);
+  const options = getCookieOptions();
 
   return res
     .status(200)
@@ -182,14 +180,7 @@ const loginUser = asyncHandler(async (req, res) => {
     "-password -refreshToken"
   );
 
-  const options = {
-    httpOnly: true,
-    secure: true, // true in production
-    sameSite: "None", // important for cross-site
-    // domain: ".vercel.app",
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
-  };
-  console.log(options);
+  const options = getCookieOptions();
 
   return res
     .status(200)
@@ -221,14 +212,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     }
   );
 
-  const options = {
-    httpOnly: true,
-    secure: true, // true in production
-    sameSite: "None", // important for cross-site
-    // domain: ".vercel.app",
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
-  };
-  console.log(options);
+  const options = getCookieOptions();
 
   return res
     .status(200)
@@ -261,14 +245,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       throw new ApiError(401, "Refresh token is expired or used");
     }
 
-    const options = {
-      httpOnly: true,
-      secure: true, // true in production
-      sameSite: "None", // important for cross-site
-      // domain: ".vercel.app",
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    };
-    console.log(options);
+    const options = getCookieOptions();
 
     const { accessToken, newRefreshToken } =
       await generateAccessAndRefreshTokens(user._id);
