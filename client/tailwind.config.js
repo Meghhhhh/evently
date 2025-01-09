@@ -14,7 +14,7 @@ export default {
         lightgreyplusplus: "#5A5A5A",
         red: "#FF5364",
         reddark: "#FF5320",
-        black: "#000000",
+        black: "#000000", 
         white: "#FFFFFF",
         offwhite: "#f2f2f2",
         darkgrey: "#5a5a5a",

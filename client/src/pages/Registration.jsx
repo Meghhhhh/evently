@@ -145,12 +145,6 @@ const Registration = () => {
           {selectedVenue.venueDescription}
         </p> 
       </div>
-
-      <p className="text-4xl md:text-5xl lg:text-6xl text-center mt-20 font-semibold">
-        Reviews from users conducting events here!
-      </p>
-      <ReviewSlider reviews={reviews} />
-
       <p className=" text-4xl md:text-5xl lg:text-6xl text-center mt-20 font-semibold">
         CATERER
       </p>

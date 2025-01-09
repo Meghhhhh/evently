@@ -12,7 +12,7 @@ const LocationCard = ({ modal, message, navigateTo, dispatchAction }) => {
   return (
     <div
       key={modal._id}
-      className="bg-gray-700 rounded-lg shadow-lg overflow-hidden"
+      className="bg-lightgreyplus rounded-lg shadow-lg overflow-hidden"
     >
       <img
         src={modal.venueImage || modal.cityImage}
@@ -23,14 +23,14 @@ const LocationCard = ({ modal, message, navigateTo, dispatchAction }) => {
         <h3 className=" text-lg font-bold mt-1 uppercase">
           {modal.venueName || modal.cityName}
         </h3>
-        <h3 className=" text-sm font-bold uppercase">
+        <h3 className=" text-sm text-gry font-bold uppercase">
         {modal.venueCity? modal.venueCity: null}
         </h3>
-        <p className="text-gray-300 text-md">
+        <p className="text-gray-300 text-gry text-md">
           {modal.venueDescription || modal.cityDescription}
         </p>
       </div>
-      <button className="w-full h-[50px] bg-red" onClick={handleBtnClick}>
+      <button className="w-full h-[50px] bg-pupll" onClick={handleBtnClick}>
         {message}
       </button>
     </div>
