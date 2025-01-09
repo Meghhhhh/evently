@@ -96,7 +96,7 @@ import axios from 'axios'
         >
           {reviews.map((review, i) => (
             <SwiperSlide key={i}>
-              <div className="flex flex-col gap-3  p-3 text-[14px] bg-gry rounded-md">
+              <div className="flex flex-col gap-3  p-3 text-[14px] border-lightgreyplusplus border-2 rounded-md">
                 <div className="flex items-center gap-4">
                   <img
                     src={

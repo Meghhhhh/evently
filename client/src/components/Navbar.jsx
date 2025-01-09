@@ -10,47 +10,35 @@ import { Link } from 'react-router-dom';
 
 const Navbar = ({ onSidebarToggle }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [theme, setTheme] = useState('true');
 
   useEffect(() => {
     const userToken = Cookies.get('accessToken');
-
     setIsLoggedIn(!!userToken);
-  }, []);
+
+    // Check localStorage for theme
+    const storedTheme = localStorage.getItem('theme') || 'true';
+    setTheme(storedTheme);
+  }, [theme]);
+
+  const handleThemeChange = () => {
+
+    setTheme((currTheme) => !currTheme)
+  }
+  const navbarClass = 
+    theme === 'false'
+      ? 'bg-gray text-white shadow-lg shadow-pupll/20' // Dark theme styles
+      : 'bg-lgrey text-black shadow-lg shadow-pupll/20'; // Light theme styles
 
   return (
-    <nav className="h-16 w-full flex items-center justify-between bg-white text-black p-4 shadow-lg bg-opacity-90 backdrop-blur-sm fixed z-50 top-0">
+    <nav
+      className={`h-16 w-full flex items-center justify-between p-4  bg-opacity-80 backdrop-blur-sm fixed z-50 top-0 ${navbarClass}`}
+    >
       <div className="text-xl font-bold">
         <Link to="/home">
-          <img src={Logo} alt="Logo" width="114px" height="114px" className="" />
+          <img src={Logo} alt="Logo" width="114px" height="114px" />
         </Link>
       </div>
-
-      {/* <div className="hidden sm:flex lg:space-x-12"> */}
-        {/* <a
-          href="#home"
-          className="hover:bg-lightgreyplusplus hover:text-white font-bold px-3 py-1 rounded-md transition-all duration-300"
-        >
-          Home
-        </a>
-        <a
-          href="#about"
-          className="hover:bg-lightgreyplusplus hover:text-white font-bold px-3 py-1 rounded-md transition-all duration-300"
-        >
-          About
-        </a>
-        <a
-          href="#services"
-          className="hover:bg-lightgreyplusplus hover:text-white font-bold px-3 py-1 rounded-md transition-all duration-300"
-        >
-          Services
-        </a>
-        <a
-          href="#contact"
-          className="hover:bg-lightgreyplusplus hover:text-white font-bold px-3 py-1 rounded-md transition-all duration-300"
-        >
-          Contact
-        </a> */}
-      {/* </div> */}
 
       <div className="flex items-center">
         <div className="relative lg:block">
@@ -64,7 +52,8 @@ const Navbar = ({ onSidebarToggle }) => {
           />
         </div>
 
-        <div className="hidden sm:flex sm:items-center sm:justify-center sm:h-full sm:p-2 cursor-pointer hover:bg-lightgreyplusplus rounded-[50%] mx-2">
+        <div className="hidden sm:flex sm:items-center sm:justify-center sm:h-full sm:p-2 cursor-pointer hover:bg-lightgreyplusplus rounded-[50%] mx-2"
+        onClick={handleThemeChange}>
           <ThemeConverter />
         </div>
 
