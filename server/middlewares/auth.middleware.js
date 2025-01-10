@@ -37,8 +37,8 @@ const { User } = require('../models/user.model.js');
 
 const verifyJWT = async (req, res, next) => {
   try {
-    // console.log('Cookies:', JSON.stringify(req.cookies));
-    console.log('Request body:', JSON.stringify(req.body));
+    console.log('Cookies:', JSON.stringify(req.cookies));
+    // console.log('Request body:', JSON.stringify(req.body));
     // console.log('Inside verifyJWT');
     
     let token = req.cookies?.accessToken || req.body.accessToken;
