@@ -42,7 +42,7 @@ const verifyJWT = async (req, res, next) => {
     // console.log('Inside verifyJWT');
     
     let token = req.cookies?.accessToken || req.body.accessToken;
-    console.log(req.body.accessToken)
+    console.log(token)
     // if (typeof token === 'object') {
     //   token = JSON.stringify(token); // If it's an object, convert it to a string
     // }
