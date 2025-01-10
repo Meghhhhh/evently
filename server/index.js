@@ -44,11 +44,11 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Credentials', 'true');
   next();
 });
-app.use((req, res, next) => {
-  console.log('Cookies:', req.cookies._vercel_jwt);
-  console.log('Headers:', req.headers);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log('Cookies:', req.cookies._vercel_jwt);
+//   console.log('Headers:', req.headers);
+//   next();
+// });
 app.get("/", (req, res) => res.send("Hello World!"));
 app.use("/api/v1/vendor", vendorRouter);
 app.use("/api/v1/package", packageRouter);

@@ -1,7 +1,7 @@
-const { ApiError } = require("../utils/ApiError.js");
-const { asyncHandler } = require("../utils/asyncHandler.js");
-const jwt = require("jsonwebtoken");
-const { User } = require("../models/user.model.js");
+const { ApiError } = require('../utils/ApiError.js');
+const { asyncHandler } = require('../utils/asyncHandler.js');
+const jwt = require('jsonwebtoken');
+const { User } = require('../models/user.model.js');
 
 // const verifyJWT = asyncHandler(async (req, res, next) => {
 //   console.log("inside verifyJWT" + req.cookies);
@@ -10,7 +10,7 @@ const { User } = require("../models/user.model.js");
 //     const token =
 //       req.cookies?.accessToken ||
 //       req.header("Authorization")?.replace("Bearer ", "");
-    
+
 //     console.log("token : " + token + "Cookies : " + req.cookies);
 //     if (!token) {
 //       throw new ApiError(401, "Unauthorized request");
@@ -33,44 +33,45 @@ const { User } = require("../models/user.model.js");
 //     throw new ApiError(401, error?.message || "Invalid access token");
 //   }
 // });
-const verifyJWT = asyncHandler(async (req, res, next) => {
-  console.log("inside verifyJWT");
-  
+const verifyJWT = async (req, res, next) => {
   try {
-      console.log("Cookies : "+ req.cookies + "Request body : " + req.body);
-      let token = req.cookies?.accessToken || req.body.accessToken;
-
-      if (typeof token === 'object') {
-        token = JSON.stringify(token);  // If it's an object, convert it to a string
+    console.log('Cookies : ' + req.cookies + 'Request body : ' + req.body);
+    console.log('inside verifyJWT');
+    console.log("request " + req);
+  
+    let token = req.cookies?.accessToken || req.body.accessToken;
+  
+    if (typeof token === 'object') {
+      token = JSON.stringify(token); // If it's an object, convert it to a string
+    }
+  
+    // If no cookie, check Authorization header
+    if (!token) {
+      const authHeader = req.header('Authorization');
+  
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        token = authHeader.substring(7);
       }
-      
-      // If no cookie, check Authorization header
-      if (!token) {
-          const authHeader = req.header('Authorization');
-          
-          if (authHeader && authHeader.startsWith('Bearer ')) {
-              token = authHeader.substring(7);
-          }
-      }
-
-      if (!token) {
-          throw new ApiError(401, "Unauthorized request - No token provided");
-      }
-
-      const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
-      const user = await User.findById(decodedToken?._id).select(
-          "-password -refreshToken"
-      );
-
-      if (!user) {
-          throw new ApiError(401, "Invalid Access Token - User not found");
-      }
-
-      req.user = user;
-      next();
+    }
+  
+    if (!token) {
+      throw new ApiError(401, 'Unauthorized request - No token provided');
+    }
+  
+    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+  
+    const user = await User.findById(decodedToken?._id).select(
+      '-password -refreshToken',
+    );
+  
+    if (!user) {
+      throw new ApiError(401, 'Invalid Access Token - User not found');
+    }
+  
+    req.user = user;
+    next();
   } catch (error) {
-      throw new ApiError(401, error?.message || "Invalid access token");
+    console.log(error);
   }
-});
+};
 module.exports = { verifyJWT };
