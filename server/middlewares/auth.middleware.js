@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../models/user.model.js');
 
 // const verifyJWT = asyncHandler(async (req, res, next) => {
+
 //   console.log("inside verifyJWT" + req.cookies);
 //   try {
 //     console.log("token : " + token + "Cookies : " + req.cookies);
@@ -33,17 +34,18 @@ const { User } = require('../models/user.model.js');
 //     throw new ApiError(401, error?.message || "Invalid access token");
 //   }
 // });
+
 const verifyJWT = async (req, res, next) => {
   try {
-    console.log('Cookies : ' + req.cookies + 'Request body : ' + req.body);
-    console.log('inside verifyJWT');
-    console.log("request " + req);
+    console.log('Cookies:', JSON.stringify(req.cookies));
+    console.log('Request body:', JSON.stringify(req.body));
+    console.log('Inside verifyJWT');
   
     let token = req.cookies?.accessToken || req.body.accessToken;
   
-    if (typeof token === 'object') {
-      token = JSON.stringify(token); // If it's an object, convert it to a string
-    }
+    // if (typeof token === 'object') {
+    //   token = JSON.stringify(token); // If it's an object, convert it to a string
+    // }
   
     // If no cookie, check Authorization header
     if (!token) {
