@@ -37,7 +37,7 @@ const verifyJWT = asyncHandler(async (req, res, next) => {
   console.log("inside verifyJWT");
   
   try {
-      console.log(req.cookies + req.body);
+      console.log("Cookies : "+ req.cookies + "Request body : " + req.body);
       let token = req.cookies?.accessToken || req.body.accessToken;
 
       if (typeof token === 'object') {
