@@ -22,10 +22,21 @@ const Profile = () => {
   const [contactNumber, setContactNumber] = useState('');
 
   useEffect(() => {
+    const accessToken = document.cookie.split('; ').reduce((acc, current) => {
+      const [key, value] = current.split('=');
+      if (key === 'accessToken') {
+        acc.accessToken = value; // Assign the accessToken value
+      }
+      return acc;
+    }, {}).accessToken;
+
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(
+        const response = await axios.post(
           `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/current-user`,
+          {
+            accessToken,
+          },
           { withCredentials: true },
         );
         const obj = response.data.data;
