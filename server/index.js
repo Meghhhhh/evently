@@ -45,7 +45,7 @@ app.use((req, res, next) => {
   next();
 });
 app.use((req, res, next) => {
-  console.log('Cookies:', req.cookies);
+  console.log('Cookies:', req.cookies._vercel_jwt);
   console.log('Headers:', req.headers);
   next();
 });

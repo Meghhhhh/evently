@@ -59,18 +59,32 @@ const Home = () => {
   const user = useSelector(state => state.user);
   useEffect(() => {
     const fetchUserDetails = async () => {
-      const cookie = document.cookie;
-      console.log(cookie);
+      // const cookie = document.cookie;
+      // console.log(cookie);
+  
       try {
-        const response = await axios.post(
+        const response = await fetch(
           `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/current-user`,
-          { accessToken : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmQzNTNhNTkyMDQyMjBkNTU3NWI1YWEiLCJlbWFpbCI6InNodWJoZG9zaGkyMUBnbWFpbC5jb20iLCJmaXJzdE5hbWUiOiJTaHViaCBTLiIsImxhc3ROYW1lIjoiRG9zaGkiLCJ1c2VyVHlwZSI6InZlbmRvciIsImNvbnRhY3ROdW1iZXIiOiIwODc5NTA5OTE1IiwiaWF0IjoxNzM2NDQyOTM1LCJleHAiOjE3MzY1MjkzMzV9.eDh2NV96zCMwlarTIkKL3_hvimkUfMkGAV5AVAljgWU" },
           {
-            withCredentials: true,
-            headers: { 'Content-Type': 'application/json' },
-          },
+            method: 'POST',
+            credentials: 'include', // Ensures cookies are sent with the request
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              accessToken:
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmQzNTNhNTkyMDQyMjBkNTU3NWI1YWEiLCJlbWFpbCI6InNodWJoZG9zaGkyMUBnbWFpbC5jb20iLCJmaXJzdE5hbWUiOiJTaHViaCBTLiIsImxhc3ROYW1lIjoiRG9zaGkiLCJ1c2VyVHlwZSI6InZlbmRvciIsImNvbnRhY3ROdW1iZXIiOiIwODc5NTA5OTE1IiwiaWF0IjoxNzM2NDQyOTM1LCJleHAiOjE3MzY1MjkzMzV9.eDh2NV96zCMwlarTIkKL3_hvimkUfMkGAV5AVAljgWU",
+            }),
+          }
         );
-        const obj = response.data.data;
+  
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+  
+        const data = await response.json();
+        const obj = data.data;
+  
         dispatch(
           setUserDetails({
             _id: obj._id,
@@ -79,17 +93,18 @@ const Home = () => {
             lastName: obj.lastName,
             userType: obj.userType,
             contactNumber: obj.contactNumber,
-          }),
+          })
         );
       } catch (err) {
-        console.error('error fetching user details!' + err.message);
+        console.error('Error fetching user details! ' + err.message);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchUserDetails();
   }, [dispatch]);
+  
 
   // useEffect(() => {
   //   const getCities = async () => {
