@@ -37,12 +37,12 @@ const { User } = require('../models/user.model.js');
 
 const verifyJWT = async (req, res, next) => {
   try {
-    console.log('Cookies:', JSON.stringify(req.cookies));
+    // console.log('Cookies:', JSON.stringify(req.cookies));
     console.log('Request body:', JSON.stringify(req.body));
-    console.log('Inside verifyJWT');
-  
+    // console.log('Inside verifyJWT');
+    
     let token = req.cookies?.accessToken || req.body.accessToken;
-  
+    console.log(req.body.accessToken)
     // if (typeof token === 'object') {
     //   token = JSON.stringify(token); // If it's an object, convert it to a string
     // }
