@@ -16,18 +16,18 @@ const { verifyJWT } = require("../middlewares/auth.middleware.js");
 
 const router = Router();
  
-router.route("/register").post(registerUser);
-router.route("/login").post(loginUser);
+router.post("/register", registerUser);
+router.post("/login", loginUser);
 router.post("/forgot-password/request-otp", forgetPassword);
 router.post("/forgot-password/verify-otp", resetPasswordWithOtp);
 
 // Secured routes
 router.post("/verify", verifyJWT, verifyUser);
 router.post("/resend-otp", verifyJWT, resendOTP);
-router.route("/logout").post(verifyJWT, logoutUser);
-router.route("/refresh-token").post(refreshAccessToken);
-router.route("/change-password").post(verifyJWT, changeCurrentPassword);
-router.route("/current-user").post(verifyJWT, getCurrentUser);
-router.route("/update-account").patch(verifyJWT, updateAccountDetails);
+router.post("/logout", verifyJWT, logoutUser);
+router.post("/refresh-token", refreshAccessToken);
+router.post("/change-password", verifyJWT, changeCurrentPassword);
+router.post("/current-user", verifyJWT, getCurrentUser);
+router.patch("/update-account", verifyJWT, updateAccountDetails);
 
 module.exports = router;
